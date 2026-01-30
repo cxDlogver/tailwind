@@ -1,147 +1,78 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
-/*
-  OKLCH 版本（Tailwind v4 / CSS-first）
-  - 使用 oklch() 作为颜色空间：更符合“人眼感知”，做明暗/渐变/主题切换更稳。
-  - 注：你写的 #F0F0F0 不是合法 hex，我按 #F0F0F0 处理。
-*/
 @theme {
-  /* =========================
-   * Brand / 品牌主色
-   * ========================= */
+  /* 品牌主色 */
+  --color-canopus: oklch(50.99% 0.0567 200.3); /* 穹律青：主视觉大面积铺色 */
+  --color-brand-dark: oklch(31.25% 0.0321 198.8); /* 深绿：深色模块/深背景容器 */
+  --color-bg-black: oklch(0% 0 0); /* 背景黑：遮罩/极深背景 */
+  --color-bg-white: oklch(95.51% 0 0); /* 背景白：浅背景（对应 #F0F0F0） */
 
-  /* 穹律青（CANOPUS GREEN）：品牌主色 / 主视觉大面积铺色 */
-  --color-canopus: oklch(50.99% 0.0567 200.3);
-
-  /* 深绿（Dark Green）：深色模块 / 深背景容器 */
-  --color-brand-dark: oklch(31.25% 0.0321 198.8);
-
-  /* 背景黑：遮罩/极深背景 */
-  --color-bg-black: oklch(0.00% 0.0000 0.0);
-
-  /* 背景白：浅背景（由 #F0F0F0 转换） */
-  --color-bg-white: oklch(95.51% 0.0000 0.0);
-
-  /* =========================
-   * Brand Extension / 品牌延伸色
-   * ========================= */
-
-  /* 延伸色 1：深蓝强调 */
-  --color-brand-ext-1: oklch(24.67% 0.1553 267.1);
-
-  /* 延伸色 2：青绿次强调（常用于 hover/secondary） */
-  --color-brand-ext-2: oklch(58.61% 0.0934 182.7);
-
-  /* 延伸色 3：浅青柔和强调（标签/弱强调底） */
-  --color-brand-ext-3: oklch(74.82% 0.0640 185.6);
-
-  /* 延伸色 4：极浅青（淡背景/浅铺底） */
-  --color-brand-ext-4: oklch(95.79% 0.0180 201.1);
-
-  /* 渐变延伸色：首屏/CTA 背景（由 #1AE190 → #30AFAF 转换） */
+  /* 品牌延伸色 */
+  --color-brand-ext-1: oklch(24.67% 0.1553 267.1); /* 深蓝强调 */
+  --color-brand-ext-2: oklch(58.61% 0.0934 182.7); /* 青绿次强调（hover/secondary 场景） */
+  --color-brand-ext-3: oklch(74.82% 0.064 185.6); /* 浅青柔和强调（标签/弱强调底） */
+  --color-brand-ext-4: oklch(95.79% 0.018 201.1); /* 极浅青（淡背景/浅铺底） */
   --bg-brand-gradient: linear-gradient(
     90deg,
     oklch(80.31% 0.1836 158.1) 0%,
-    oklch(68.82% 0.1061 195.0) 100%
-  );
+    oklch(68.82% 0.1061 195) 100%
+  ); /* 首屏/CTA 背景渐变（对应 #1AE190 → #30AFAF） */
 
-  /* =========================
-   * Neutrals / 辅助色（中性色）
-   * ========================= */
+  /* 辅助色（中性色） */
+  --color-text-primary: oklch(32.11% 0 0); /* 主要文字黑：正文/标题默认 */
+  --color-text-regular: oklch(51.03% 0 0); /* 常规文字灰：次级正文/说明 */
+  --color-text-secondary: oklch(68.3% 0 0); /* 次要文字灰：弱化信息 */
+  --color-text-placeholder: oklch(79.21% 0 0); /* 占位文字浅灰：placeholder/禁用态文字 */
+  --color-text-on-dark: oklch(89.75% 0 0); /* 主要文字白：深色背景上的默认文字 */
+  --color-divider: oklch(92.8% 0 0); /* 分割线浅灰：divider/border */
 
-  /* 主要文字黑：正文/标题默认 */
-  --color-text-primary: oklch(32.11% 0.0000 0.0);
+  /* 功能色 */
+  --color-success-700: oklch(13.88% 0.0049 107); /* 成功：点击态（更深） */
+  --color-success-600: oklch(54.86% 0.173 141.3); /* 成功：常规态 */
+  --color-success-50: oklch(98.45% 0.019 133.1); /* 成功：浅色背景 */
+  --color-error-700: oklch(53.04% 0.1908 26.7); /* 错误：点击态（更深） */
+  --color-error-600: oklch(60.02% 0.2141 24.2); /* 错误：常规态 */
+  --color-error-50: oklch(97.27% 0.0136 34.3); /* 错误：浅色背景 */
+  --color-warning-700: oklch(71.15% 0.1509 73.9); /* 警告：点击态（更深） */
+  --color-warning-600: oklch(81.25% 0.1696 76.2); /* 警告：常规态 */
+  --color-warning-50: oklch(98.76% 0.0289 100.6); /* 警告：浅色背景 */
+  --color-link-700: oklch(47.78% 0.1936 259.9); /* 链接：点击态（hover/active） */
+  --color-link-600: oklch(56.49% 0.2313 260.1); /* 链接：常规态 */
+  --color-link-50: oklch(94.1% 0.0218 250.2); /* 链接：浅色背景 */
 
-  /* 常规文字灰：次级正文/说明 */
-  --color-text-regular: oklch(51.03% 0.0000 0.0);
+  /* 语义别名（推荐）：统一语义，便于主题切换维护 */
+  --color-primary: var(--color-canopus); /* 主色：默认穹律青 */
+  --color-primary-hover: var(--color-brand-ext-2); /* 主色 hover：青绿延伸色 */
+  --color-primary-dark: var(--color-brand-dark); /* 主色深色：深绿 */
+  --color-surface: var(--color-surface-white); /* 页面表面：纯白 */
+  --color-surface-muted: var(--color-bg-white); /* 页面弱表面：对应 #F0F0F0 */
+  --color-text: var(--color-text-primary); /* 默认文字 */
+  --color-muted: var(--color-text-regular); /* 弱文字 */
+  --color-placeholder: var(--color-text-placeholder); /* 占位颜色 */
+  --color-border: var(--color-divider); /* 默认边框/分割线 */
 
-  /* 次要文字灰：弱化信息 */
-  --color-text-secondary: oklch(68.30% 0.0000 0.0);
-
-  /* 占位文字浅灰：placeholder/禁用态文字 */
-  --color-text-placeholder: oklch(79.21% 0.0000 0.0);
-
-  /* 主要文字白：深色背景上的默认文字 */
-  --color-text-on-dark: oklch(89.75% 0.0000 0.0);
-
-  /* 分割线浅灰：divider/border */
-  --color-divider: oklch(92.80% 0.0000 0.0);
-
-  /* 背景色 / 后台白：纯白画布 */
-  --color-surface-white: oklch(100.00% 0.0000 0.0);
-
-  /* =========================
-   * Status / 功能色
-   * ========================= */
-
-  /* 成功：点击态（更深） */
-  --color-success-700: oklch(13.88% 0.0049 107.0);
-
-  /* 成功：常规态 */
-  --color-success-600: oklch(54.86% 0.1730 141.3);
-
-  /* 成功：浅色背景 */
-  --color-success-50: oklch(98.45% 0.0190 133.1);
-
-  /* 错误：点击态（更深） */
-  --color-error-700: oklch(53.04% 0.1908 26.7);
-
-  /* 错误：常规态 */
-  --color-error-600: oklch(60.02% 0.2141 24.2);
-
-  /* 错误：浅色背景 */
-  --color-error-50: oklch(97.27% 0.0136 34.3);
-
-  /* 警告：点击态（更深） */
-  --color-warning-700: oklch(71.15% 0.1509 73.9);
-
-  /* 警告：常规态 */
-  --color-warning-600: oklch(81.25% 0.1696 76.2);
-
-  /* 警告：浅色背景 */
-  --color-warning-50: oklch(98.76% 0.0289 100.6);
-
-  /* 链接：点击态（hover/active） */
-  --color-link-700: oklch(47.78% 0.1936 259.9);
-
-  /* 链接：常规态 */
-  --color-link-600: oklch(56.49% 0.2313 260.1);
-
-  /* 链接：浅色背景 */
-  --color-link-50: oklch(94.10% 0.0218 250.2);
-
-  /* =========================
-   * Semantic / 语义别名（推荐）
-   * ========================= */
-
-  /* Primary：默认用穹律青 */
-  --color-primary: var(--color-canopus);
-
-  /* Primary hover：建议用延伸色 2 */
-  --color-primary-hover: var(--color-brand-ext-2);
-
-  /* Primary 深色：深绿 */
-  --color-primary-dark: var(--color-brand-dark);
-
-  /* 页面表面：纯白 */
-  --color-surface: var(--color-surface-white);
-
-  /* 页面弱表面：F0F0F0 */
-  --color-surface-muted: var(--color-bg-white);
-
-  /* 默认文字 / 弱文字 / 占位 */
-  --color-text: var(--color-text-primary);
-  --color-muted: var(--color-text-regular);
-  --color-placeholder: var(--color-text-placeholder);
-
-  /* 默认边框/分割线 */
-  --color-border: var(--color-divider);
-
-  /* =========================
-   * Radius / 圆角
-   * ========================= */
-
-  /* 卡片/弹窗通用圆角 */
-  --radius-card: 16px;
+  /* 圆角：统一组件圆角规范 */
+  --radius-card: 16px; /* 卡片/弹窗通用圆角 */
 }
 
+/* 全局基础样式（可选，纯工具类开发可删除） */
+@layer base {
+  html {
+    color: var(--color-text);
+    background: var(--color-surface-muted);
+  }
+  a {
+    color: var(--color-link-600);
+  }
+  a:hover {
+    color: var(--color-link-700);
+  }
+}
+
+@utility main-card {
+  @apply mx-auto max-w-screen-2xl px-6 pt-52 pb-40 md:px-24;
+}
+
+@utility section-card {
+  @apply relative z-10 px-6 pt-12 pb-12 md:px-24;
+}

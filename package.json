@@ -6,15 +6,37 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "test": "vitest"
   },
   "dependencies": {
+    "@nuxt/icon": "2.2.1",
+    "@nuxt/ui": "^4.4.0",
     "@tailwindcss/vite": "^4.1.18",
     "nuxt": "^4.3.0",
+    "path": "^0.12.7",
     "tailwindcss": "^4.1.18",
     "vue": "^3.5.27",
     "vue-router": "^4.6.4"
   },
-  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264"
+  "packageManager": "pnpm@10.28.2+sha512.41872f037ad22f7348e3b1debbaf7e867cfd448f2726d9cf74c08f19507c31d2c8e7a11525b983febc2df640b5438dee6023ebb1f84ed43cc2d654d2bc326264",
+  "devDependencies": {
+    "@iconify-json/heroicons": "^1.2.3",
+    "@nuxt/eslint": "^1.13.0",
+    "@types/node": "^25.0.10",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "install": "^0.13.0",
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "typescript": "^5.9.3",
+    "vite-plugin-eslint2": "^5.0.4",
+    "vite-tsconfig-paths": "^6.0.5",
+    "vitest": "^4.0.18"
+  }
 }
