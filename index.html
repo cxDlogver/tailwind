@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>漏洞检测定量安全评估方案 V2.0</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1, h2 {
+      color: #2c3e50;
+      text-align: center;
+    }
+
+    .tree {
+      list-style-type: none;
+      padding-left: 20px;
+      border-left: 2px solid #ccc;
+    }
+
+    .node {
+      margin: 5px 0;
+      position: relative;
+      padding-left: 20px;
+    }
+
+    .node:before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 10px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #3498db;
+    }
+
+    .node > .label {
+      background-color: #ecf0f1;
+      padding: 5px 10px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+
+    .node > .label:hover {
+      background-color: #bdc3c7;
+    }
+
+    .sub-node {
+      margin-left: 20px;
+    }
+
+    .tree .tree {
+      margin-top: 10px;
+    }
+
+    .tree .node:last-child:before {
+      display: none;
+    }
+
+    .tree .node > .label {
+      cursor: pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>漏洞检测定量安全评估方案 V2.0</h1>
+
+    <h2>静态代码分析评估体系</h2>
+    <ul class="tree">
+      <li class="node">
+        <span class="label">静态代码分析</span>
+        <ul class="tree">
+          <li class="node">
+            <span class="label">漏洞数量评分</span>
+            <ul class="tree">
+              <li class="node"><span class="label">高危漏洞: 加权系数4</span></li>
+              <li class="node"><span class="label">中危漏洞: 加权系数3</span></li>
+              <li class="node"><span class="label">低危漏洞: 加权系数2</span></li>
+              <li class="node"><span class="label">次低危漏洞: 加权系数1</span></li>
+              <li class="node"><span class="label">微弱漏洞: 加权系数0.5</span></li>
+            </ul>
+          </li>
+          <li class="node">
+            <span class="label">漏洞密度评分</span>
+            <ul class="tree">
+              <li class="node"><span class="label">密度 ≤ 0.5: 100分</span></li>
+              <li class="node"><span class="label">0.5 < 密度 < 2.0: 60-100分</span></li>
+              <li class="node"><span class="label">密度 ≥ 2.0: 扣分，最低0分</span></li>
+            </ul>
+          </li>
+          <li class="node">
+            <span class="label">漏洞影响范围评分</span>
+            <ul class="tree">
+              <li class="node"><span class="label">核心模块关联扣分30分</span></li>
+              <li class="node"><span class="label">远程可触发扣分25分</span></li>
+              <li class="node"><span class="label">调用链≥5层扣分15分</span></li>
+            </ul>
+          </li>
+          <li class="node">
+            <span class="label">漏洞类型风险评分</span>
+            <ul class="tree">
+              <li class="node"><span class="label">内存破坏类: 风险系数1.0</span></li>
+              <li class="node"><span class="label">注入类: 风险系数0.9</span></li>
+              <li class="node"><span class="label">访问控制缺失: 风险系数0.8</span></li>
+              <li class="node"><span class="label">敏感信息泄露: 风险系数0.5</span></li>
+            </ul>
+          </li>
+          <li class="node">
+            <span class="label">代码结构与复杂性评分</span>
+            <ul class="tree">
+              <li class="node"><span class="label">可读性与注释质量</span></li>
+              <li class="node"><span class="label">模块化与耦合度</span></li>
+              <li class="node"><span class="label">控制流复杂度</span></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2>动态模糊测试评估体系</h2>
+    <ul class="tree">
+      <li class="node">
+        <span class="label">动态模糊测试</span>
+        <ul class="tree">
+          <li class="node">
+            <span class="label">漏洞数量评分</span>
+            <ul class="tree">
+              <li class="node"><span class="label">崩溃样本数量</span></li>
+              <li class="node"><span class="label">挂起样本数量</span></li>
+            </ul>
+          </li>
+          <li class="node">
+            <span class="label">漏洞类型评分</span>
+            <ul class="tree">
+              <li class="node"><span class="label">SIGSEGV: 高危</span></li>
+              <li class="node"><span class="label">SIGABRT: 中危</span></li>
+              <li class="node"><span class="label">Hang: 低危</span></li>
+            </ul>
+          </li>
+          <li class="node">
+            <span class="label">漏洞稳定性评分</span>
+            <ul class="tree">
+              <li class="node"><span class="label">可复现崩溃</span></li>
+            </ul>
+          </li>
+          <li class="node">
+            <span class="label">模糊测试覆盖与效率评分</span>
+            <ul class="tree">
+              <li class="node"><span class="label">路径覆盖能力</span></li>
+              <li class="node"><span class="label">语料库质量</span></li>
+              <li class="node"><span class="label">执行效率</span></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+  </div>
+
+</body>
+</html>
