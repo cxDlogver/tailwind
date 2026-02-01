@@ -153,6 +153,7 @@ const videoProgressWidth = computed(() => {
             <div class="h-1 w-full rounded bg-slate-300/20" />
             <div class="h-1 w-2/3 rounded bg-slate-300/10" />
           </div>
+          <Icon name="my-icon:scales" class="h-8 w-8 text-slate-300/40" />
         </template>
 
         <!-- STRUCTURED -->

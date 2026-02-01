@@ -1,5 +1,5 @@
-
 import tailwindcss from '@tailwindcss/vite'
+import { fileURLToPath } from 'url'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 
 const rootDir = fileURLToPath(new URL('./', import.meta.url))
@@ -49,5 +49,12 @@ export default defineNuxtConfig({
       ok: 'heroicons:check', // 确认
       warn: 'heroicons:exclamation-triangle',
     },
+    provider: 'server',
+    customCollections: [
+      {
+        prefix: 'my-icon',
+        dir: './assets/icons',
+      },
+    ],
   },
 })
