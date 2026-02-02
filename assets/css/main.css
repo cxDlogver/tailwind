@@ -69,10 +69,18 @@
   }
 }
 
+@utility p-bottom {
+  @apply pb-40;
+}
+
+@utility p-top {
+  @apply pt-52;
+}
+
 @utility main-card {
-  @apply mx-auto max-w-screen-2xl px-6 pt-52 pb-40 md:px-24;
+  @apply mx-auto max-w-screen-2xl px-18 md:px-36;
 }
 
 @utility section-card {
-  @apply relative z-10 px-6 pt-12 pb-12 md:px-24;
+  @apply relative z-10 pt-12 pb-12;
 }

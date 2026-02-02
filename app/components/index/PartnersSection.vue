@@ -58,10 +58,8 @@ const rowBItems = computed(() => [...partnerData.value, ...partnerData.value])
 </script>
 
 <template>
-  <div class="mb-20 lg:mb-40">
-    <div
-      class="justify-centerbg-red-500 relative flex min-h-50 flex-col items-center justify-center"
-    >
+  <div class="mb-20 w-full lg:mb-40">
+    <div class="relative flex min-h-50 flex-col items-center justify-center">
       <div class="pointer-events-none absolute inset-10 z-0 flex items-center justify-center">
         <span
           class="text-primary/5 text-center text-5xl leading-none font-semibold tracking-[0.30em] uppercase select-none md:text-[9rem]"
