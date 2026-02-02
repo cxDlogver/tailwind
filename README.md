@@ -102,17 +102,18 @@ pnpm add -D prettier prettier-plugin-tailwindcss
 
 ### 2) 在 Nuxt 中启用 `@nuxt/eslint`
 
+∂
 在 [nuxt.config.ts](nuxt.config.ts) 启用模块并让它生成符合项目结构的 ESLint 配置：
 
 ```ts
 export default defineNuxtConfig({
-	modules: ['@nuxt/eslint'],
-	eslint: {
-		config: {
-			stylistic: true,
-			typescript: true,
-		},
-	},
+  modules: ['@nuxt/eslint'],
+  eslint: {
+    config: {
+      stylistic: true,
+      typescript: true,
+    },
+  },
 })
 ```
 
@@ -149,10 +150,10 @@ export default withNuxt(eslintConfigPrettier)
 
 ```json
 {
-	"scripts": {
-		"lint": "eslint .",
-		"lint:fix": "eslint . --fix"
-	}
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  }
 }
 ```
 
@@ -169,12 +170,12 @@ pnpm run lint:fix
 
 ```jsonc
 {
-	"editor.formatOnSave": true,
-	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "always"
-	},
-	"eslint.useFlatConfig": true,
-	"eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"]
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+  },
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
 }
 ```
 
@@ -194,9 +195,9 @@ Prettier 配置在 [.prettierrc.json](.prettierrc.json)：
 
 ```json
 {
-	"plugins": ["prettier-plugin-tailwindcss"],
-	"singleQuote": true,
-	"semi": false
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "singleQuote": true,
+  "semi": false
 }
 ```
 
@@ -204,18 +205,18 @@ Prettier 配置在 [.prettierrc.json](.prettierrc.json)：
 
 ### 7) 常见问题排查
 
-1) 保存没自动修复？
+1. 保存没自动修复？
 
 - 确认装了 `dbaeumer.vscode-eslint`
 - VS Code 命令面板执行 `Developer: Reload Window`
 - 确认工作区 settings 生效（不是被用户级 settings 覆盖）
 
-2) ESLint 找不到 `.nuxt/eslint.config.mjs`？
+2. ESLint 找不到 `.nuxt/eslint.config.mjs`？
 
 - 先运行 `pnpm exec nuxt prepare`
 - 如果你刚切分支/删除 `.nuxt`，需要重新 prepare
 
-3) ESLint 与 Prettier 打架（格式来回变化）？
+3. ESLint 与 Prettier 打架（格式来回变化）？
 
 - 确认根配置已追加 `eslint-config-prettier`
 - 如果你更希望“只用 ESLint 负责格式化”，需要改成安装并启用 `eslint-plugin-format`（本项目当前未启用）
