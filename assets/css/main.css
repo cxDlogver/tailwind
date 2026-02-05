@@ -1,8 +1,30 @@
 @import 'tailwindcss';
 
 @theme {
+  /* fontFamily.sans -> font-sans */
+  /* fontSize: text-h4/h3/h2/h1/body/support（含 line-height） */
+  --text-h4: 40px;
+  --leading-h4: 48px;
+
+  --text-h3: 32px;
+  --leading-h3: 40px;
+
+  --text-h2: 24px;
+  --leading-h2: 32px;
+
+  --text-h1: 20px;
+  --leading-h1: 28px;
+
+  --text-body: 16px;
+  --leading-body: 24px;
+
+  --text-support: 14px;
+  --leading-support: 20px;
+
   /* 品牌主色 */
-  --color-canopus: oklch(50.99% 0.0567 200.3); /* 穹律青：主视觉大面积铺色 */
+  --color-canopus: oklch(
+    50.99% 0.0567 200.3
+  ); /* 穹律青：主视觉大面积铺色 #3B7073 rgb(59, 112, 115) */
   --color-brand-dark: oklch(31.25% 0.0321 198.8); /* 深绿：深色模块/深背景容器 */
   --color-bg-black: oklch(0% 0 0); /* 背景黑：遮罩/极深背景 */
   --color-bg-white: oklch(95.51% 0 0); /* 背景白：浅背景（对应 #F0F0F0） */
@@ -16,7 +38,7 @@
     90deg,
     oklch(80.31% 0.1836 158.1) 0%,
     oklch(68.82% 0.1061 195) 100%
-  ); /* 首屏/CTA 背景渐变（对应 #1AE190 → #30AFAF） */
+  ); /* 首屏/CTA 背景渐变（对应 #1AE190 → #3B7073） */
 
   /* 辅助色（中性色） */
   --color-text-primary: oklch(32.11% 0 0); /* 主要文字黑：正文/标题默认 */
@@ -44,6 +66,8 @@
   --color-primary: var(--color-canopus); /* 主色：默认穹律青 */
   --color-primary-hover: var(--color-brand-ext-2); /* 主色 hover：青绿延伸色 */
   --color-primary-dark: var(--color-brand-dark); /* 主色深色：深绿 */
+  --color-primary-light: var(--color-brand-ext-4); /* #EBF1F1 (近似语义) */
+
   --color-surface: var(--color-surface-white); /* 页面表面：纯白 */
   --color-surface-muted: var(--color-bg-white); /* 页面弱表面：对应 #F0F0F0 */
   --color-text: var(--color-text-primary); /* 默认文字 */
@@ -51,8 +75,19 @@
   --color-placeholder: var(--color-text-placeholder); /* 占位颜色 */
   --color-border: var(--color-divider); /* 默认边框/分割线 */
 
+  /* neutral */
+  --color-neutral-text1: var(--color-text-primary); /* #333333 */
+  --color-neutral-text2: var(--color-text-regular); /* #666666 */
+  --color-neutral-text3: var(--color-text-secondary); /* #999999 */
+  --color-neutral-text4: var(--color-text-placeholder); /* #BBBBBB */
+  --color-neutral-divider: var(--color-divider); /* #E7E7E7 */
+  --color-neutral-bg: var(--color-surface-muted); /* #F9F9F9 / 语义背景 */
+  --color-neutral-light: var(--color-text-placeholder); /* #BBBBBB */
+
   /* 圆角：统一组件圆角规范 */
   --radius-card: 16px; /* 卡片/弹窗通用圆角 */
+
+  --background-image-brand-gradient: linear-gradient(to right, #3b7073, #529a9e);
 }
 
 /* 全局基础样式（可选，纯工具类开发可删除） */

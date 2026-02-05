@@ -1,7 +1,7 @@
 <!-- pages/news.vue  或 components/NewsCenter.vue -->
 
 <template>
-  <div class="main-card">
+  <div class="main-card p-top">
     <!-- =========================
          1) 顶部 Header（标题 + 分类卡片）
          ========================= -->
@@ -9,7 +9,7 @@
       <h2
         class="text-primary mb-6 flex items-center gap-4 font-mono text-[11px] font-bold tracking-[0.8em] uppercase"
       >
-        <span class="bg-primary h-[1px] w-12" />
+        <span class="bg-primary h-px w-12" />
         Intelligence Center
       </h2>
       <div class="mb-12">
@@ -25,7 +25,7 @@
           v-for="cat in categories"
           :key="cat.id"
           type="button"
-          class="group relative min-w-[140px] flex-1 overflow-hidden rounded-[2rem] border p-6 text-left transition-all duration-500"
+          class="group relative min-w-35 flex-1 overflow-hidden rounded-4xl border p-6 text-left transition-all duration-500"
           :class="
             activeTab === cat.id
               ? 'bg-primary border-primary shadow-primary/10 shadow-xl'
@@ -462,7 +462,7 @@ function generateAbundantNews(): NewsItem[] {
   const data: NewsItem[] = []
 
   for (let i = 1; i <= 48; i += 1) {
-    const cat = categories[i % categories.length]
+    const cat = categories[i % categories.length] as Exclude<NewsCategory, 'All'>
     const pool = CATEGORY_IMAGE_POOLS[cat]
     const baseImg = pool[i % pool.length]
     const year = i > 24 ? '2024' : '2025'

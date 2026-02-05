@@ -60,18 +60,18 @@ const rowBItems = computed(() => [...partnerData.value, ...partnerData.value])
 <template>
   <div class="mb-20 w-full lg:mb-40">
     <div class="relative flex min-h-50 flex-col items-center justify-center">
-      <div class="pointer-events-none absolute inset-10 z-0 flex items-center justify-center">
-        <span
-          class="text-primary/5 text-center text-5xl leading-none font-semibold tracking-[0.30em] uppercase select-none md:text-[9rem]"
-        >
-          CUSTOMER
-        </span>
-      </div>
-      <h2
-        class="text-primary relative z-10 text-center text-4xl font-bold tracking-tight md:text-6xl"
+      <div
+        class="relative z-10 text-center text-4xl font-bold tracking-tight text-black md:text-6xl"
       >
-        合作伙伴
-      </h2>
+        <div class="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
+          <span
+            class="text-primary/5 text-center text-6xl leading-none font-semibold tracking-[0.30em] uppercase select-none md:text-[9rem]"
+          >
+            CUSTOMER
+          </span>
+        </div>
+        <h2>合作伙伴</h2>
+      </div>
       <div class="bg-primary relative z-10 mt-8 h-1 w-20 rounded-full" />
     </div>
 
@@ -84,7 +84,7 @@ const rowBItems = computed(() => [...partnerData.value, ...partnerData.value])
       ></div>
 
       <div class="space-y-6">
-        <div class="w-full overflow-hidden py-2 select-none">
+        <div class="w-full overflow-hidden py-10 select-none">
           <div class="marquee-track" style="--marquee-duration: 50s">
             <IndexPartnersCard v-for="(item, i) in rowAItems" :key="`a-${i}`" :item="item" />
           </div>

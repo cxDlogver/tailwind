@@ -13,7 +13,7 @@
           @click="navigateTo('/')"
         >
           <div
-            class="relative flex h-14 w-14 items-center justify-center transition-transform duration-500 group-hover:rotate-360"
+            class="relative flex h-14 w-14 items-center justify-center transition-transform duration-500 group-hover:animate-bounce"
           >
             <!-- Particle Logo SVG -->
             <svg viewBox="0 0 100 100" class="h-full w-full">
@@ -54,20 +54,20 @@
         <!-- 右侧交互部分 -->
         <div class="flex items-center gap-10">
           <button
-            class="group border-primary relative hidden overflow-hidden rounded-full border px-8 py-3 transition-colors duration-500 sm:block"
+            class="group border-primary relative hidden cursor-pointer overflow-hidden rounded-full border px-8 py-3 transition-colors duration-500 sm:block"
             @click="navigateTo('/contact')"
           >
             <div
               class="bg-primary absolute inset-0 transition-transform duration-500 ease-in-out group-hover:translate-x-full"
             />
             <span
-              class="group-hover:text-primary relative z-10 text-base font-bold tracking-[0.2em] text-white uppercase transition-colors duration-500"
+              class="group-hover:text-primary relative z-10 cursor-pointer text-base font-bold tracking-[0.2em] text-white uppercase transition-colors duration-500"
             >
               预约演示
             </span>
           </button>
           <button
-            class="group flex flex-col items-end gap-1.5 p-2 transition-all"
+            class="group flex cursor-pointer flex-col items-end gap-1.5 p-2 transition-all"
             @click="isMenuOpen = true"
           >
             <div

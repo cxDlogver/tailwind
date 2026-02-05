@@ -1,62 +1,11 @@
-<script setup>
-import { onMounted } from 'vue'
-
-onMounted(() => {
-  const canvas = document.getElementById('flameCanvas')
-  const ctx = canvas.getContext('2d')
-  canvas.width = 300
-  canvas.height = 400
-
-  const particles = []
-
-  // 生成随机的火焰粒子
-  function createFlame() {
-    const particle = {
-      x: canvas.width / 2,
-      y: canvas.height,
-      size: Math.random() * 5 + 2,
-      speed: Math.random() * 1 + 2,
-      direction: Math.random() * 2 - 1, // 随机水平方向
-      color: `rgba(${Math.random() * 255}, ${Math.random() * 255}, 0, 1)`, // 随机颜色
-    }
-    particles.push(particle)
-  }
-
-  // 更新火焰粒子的位置
-  function updateFlame() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height) // 清除上帧内容
-
-    particles.forEach((particle, index) => {
-      particle.y -= particle.speed
-      particle.x += particle.direction * 0.3
-      particle.size *= 0.98 // 逐渐缩小
-      ctx.beginPath()
-      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
-      ctx.fillStyle = particle.color
-      ctx.fill()
-      ctx.closePath()
-
-      if (particle.size < 0.2) {
-        particles.splice(index, 1) // 去掉消失的粒子
-      }
-    })
-  }
-
-  // 动画循环
-  function animate() {
-    createFlame()
-    updateFlame()
-    requestAnimationFrame(animate) // 继续下一帧
-  }
-
-  // 启动动画
-  animate()
-})
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div>
-    <div class="main-card p-top">
+    <section class="p-top pb-6">
+      <IndexCelestialAuditCard />
+    </section>
+    <div class="main-card">
       <section class="section-card">
         <div class="flex flex-col items-center space-y-10 text-center">
           <div
@@ -80,24 +29,6 @@ onMounted(() => {
         </div>
       </section>
     </div>
-    <!-- <div
-      class="test relative aspect-2/1 h-50 w-full overflow-hidden rounded-2xl border border-white/10 bg-black"
-    >
-      <Transition name="reveal-in-out" appear>
-        <IndexEnergyFlowDemo
-          v-if="show"
-          src="/images/energy-flow.gif"
-          :duration-ms="1000"
-          :center-pct="35"
-          :slit-width-pct="1"
-          fit="contain"
-        />
-      </Transition>
-    </div> -->
-    <section class="px-36 pb-6">
-      <IndexCelestialAuditCard />
-    </section>
-
     <div class="main-card">
       <div class="flex flex-wrap justify-center gap-6 pt-10">
         <button
@@ -133,22 +64,6 @@ onMounted(() => {
     <section class="section-card">
       <LazyIndexPartnersSection hydrate-on-visible />
     </section>
-    <canvas id="flameCanvas"></canvas>
-
-    <!-- =========================
-         订阅我们的动态
-         ========================= -->
-    <div class="main-card p-bottom">
-      <section class="section-card">
-        <div class="mb-16 text-center">
-          <h2 class="text-4xl font-bold tracking-tight text-[#333333]">订阅我们的动态</h2>
-          <p class="mx-auto mt-4 max-w-md leading-relaxed text-[#666666]">
-            第一时间获取最新的行业深度报告与前沿技术简报，掌握数字变革的最新情报。
-          </p>
-        </div>
-        <LazyIndexNewsletterSubscription hydrate-on-visible />
-      </section>
-    </div>
   </div>
 </template>
 

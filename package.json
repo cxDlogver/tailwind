@@ -14,9 +14,11 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@nuxt/content": "^3.11.0",
     "@nuxt/icon": "2.2.1",
     "@nuxt/ui": "^4.4.0",
     "@tailwindcss/vite": "^4.1.18",
+    "better-sqlite3": "^12.6.2",
     "nuxt": "^4.3.0",
     "path": "^0.12.7",
     "tailwindcss": "^4.1.18",
@@ -39,5 +41,10 @@
     "vite-plugin-eslint2": "^5.0.4",
     "vite-tsconfig-paths": "^6.0.5",
     "vitest": "^4.0.18"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3"
+    ]
   }
 }

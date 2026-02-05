@@ -5,9 +5,9 @@ import viteTsconfigPaths from 'vite-tsconfig-paths'
 const rootDir = fileURLToPath(new URL('./', import.meta.url))
 
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/icon'],
+  modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxt/content'],
   devtools: { enabled: true },
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/animate.css'],
 
   devServer: {
     host: '0.0.0.0',
