@@ -1,19 +1,20 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 @theme {
   /* fontFamily.sans -> font-sans */
   /* fontSize: text-h4/h3/h2/h1/body/support（含 line-height） */
-  --text-h4: 40px;
-  --leading-h4: 48px;
+  --text-h1: 40px;
+  --leading-h1: 48px;
 
-  --text-h3: 32px;
-  --leading-h3: 40px;
+  --text-h2: 32px;
+  --leading-h2: 40px;
 
-  --text-h2: 24px;
-  --leading-h2: 32px;
+  --text-h3: 24px;
+  --leading-h3: 32px;
 
-  --text-h1: 20px;
-  --leading-h1: 28px;
+  --text-h4: 20px;
+  --leading-h4: 28px;
 
   --text-body: 16px;
   --leading-body: 24px;

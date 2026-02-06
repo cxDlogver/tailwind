@@ -26,9 +26,9 @@ const visions: VisionItem[] = [
 </script>
 
 <template>
-  <section class="relative overflow-hidden bg-white">
+  <section class="relative overflow-hidden">
     <!-- 使命板块 -->
-    <div class="bg-primary relative py-20 md:py-28">
+    <div class="bg-primary main-card relative py-20 md:py-28">
       <div
         class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden opacity-10 select-none"
       >
@@ -58,7 +58,7 @@ const visions: VisionItem[] = [
 
           <div class="flex justify-center">
             <div
-              class="via-primary-hover h-1 w-16 bg-gradient-to-r from-transparent to-transparent"
+              class="via-primary-hover h-1 w-16 bg-linear-to-r from-transparent to-transparent"
             />
           </div>
         </div>
@@ -73,15 +73,18 @@ const visions: VisionItem[] = [
           class="border-primary/20 mb-16 flex flex-col items-end gap-8 border-b pb-10 lg:flex-row"
         >
           <div class="lg:w-1/2">
-            <span
-              class="text-primary text-support mb-3 block flex items-center gap-2 font-black tracking-[0.4em] uppercase italic"
-            >
-              <Icon name="lucide:zap" class="h-[14px] w-[14px]" />
-              <span>Future Vision</span>
-            </span>
-
+            <div class="mb-4 flex items-center gap-2">
+              <div
+                class="bg-primary flex h-10 w-10 rotate-3 items-center justify-center rounded-xl shadow-md"
+              >
+                <Icon name="lucide:zap" class="h-5 w-5 text-white" />
+              </div>
+              <span class="text-primary text-support font-black tracking-[0.4em] uppercase italic">
+                Future Vision
+              </span>
+            </div>
             <h3
-              class="text-h4 text-neutral-text1 leading-none font-black tracking-tighter uppercase md:text-[64px]"
+              class="text-h4 text-neutral-text1 md:text-h1 leading-none font-black tracking-tighter uppercase"
             >
               企业愿景
             </h3>
@@ -89,7 +92,7 @@ const visions: VisionItem[] = [
 
           <div class="lg:w-1/2">
             <p
-              class="text-h1 md:text-h2 text-neutral-text2 leading-tight font-bold italic opacity-60"
+              class="text-h3 md:text-h3 text-neutral-text2 leading-tight font-bold italic opacity-60"
             >
               “正如乐队中的贝斯手稳住节拍，我们为互联网生态夯实安全的根基。”
             </p>
@@ -102,16 +105,16 @@ const visions: VisionItem[] = [
           <div class="sticky top-32 w-full lg:w-[35%]">
             <div class="group relative">
               <div
-                class="bg-primary/5 absolute -inset-4 -rotate-2 rounded-[2rem] transition-transform duration-500 group-hover:rotate-0"
+                class="bg-primary/5 absolute -inset-4 -rotate-2 rounded-4xl transition-transform duration-500 group-hover:rotate-0"
               />
-              <div class="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] shadow-2xl">
+              <div class="relative aspect-4/5 overflow-hidden rounded-3xl shadow-2xl">
                 <img
                   src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=1000"
                   alt="Cyber Security Vision"
                   class="h-full w-full scale-105 object-cover grayscale transition-all duration-700 group-hover:scale-100 hover:grayscale-0"
                 />
                 <div
-                  class="from-primary/60 absolute inset-0 bg-gradient-to-t to-transparent mix-blend-multiply"
+                  class="from-primary/60 absolute inset-0 bg-linear-to-t to-transparent mix-blend-multiply"
                 />
                 <div class="absolute right-6 bottom-6 left-6">
                   <p
@@ -144,13 +147,13 @@ const visions: VisionItem[] = [
               <!-- 编号与图标 -->
               <div class="flex shrink-0 items-center gap-6 pt-1">
                 <span
-                  class="text-primary/10 group-hover:text-primary/30 w-12 text-center text-[32px] leading-none font-black italic transition-colors md:text-[40px]"
+                  class="text-primary/10 group-hover:text-primary/30 md:text-h3 w-12 text-center text-[32px] leading-none font-black italic transition-colors"
                 >
                   0{{ index + 1 }}
                 </span>
 
                 <div
-                  class="to-primary-light border-primary/10 text-primary group-hover:from-primary group-hover:to-primary-hover flex h-16 w-16 items-center justify-center rounded-2xl border bg-gradient-to-br from-white shadow-sm transition-all duration-500 group-hover:scale-105 group-hover:text-white"
+                  class="to-primary-light border-primary/10 text-primary group-hover:from-primary group-hover:to-primary-hover flex h-16 w-16 items-center justify-center rounded-2xl border bg-linear-to-br from-white shadow-sm transition-all duration-500 group-hover:scale-105 group-hover:text-white"
                 >
                   <Icon :name="item.iconName" class="h-7 w-7" />
                 </div>
@@ -161,14 +164,14 @@ const visions: VisionItem[] = [
                 <div
                   class="mb-2 flex items-center gap-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 >
-                  <Icon name="lucide:play" class="text-primary h-[10px] w-[10px]" />
+                  <Icon name="lucide:play" class="text-primary h-2.5 w-2.5" />
                   <span class="text-primary text-[9px] font-black tracking-[0.3em] uppercase">
                     Stream_CH.0{{ index + 1 }}
                   </span>
                 </div>
 
                 <p
-                  class="text-body md:text-h2 text-neutral-text1 group-hover:text-primary leading-snug font-medium tracking-tight transition-colors duration-300"
+                  class="text-body md:text-h4 text-neutral-text1 group-hover:text-primary leading-snug font-medium tracking-tight transition-colors duration-300"
                 >
                   {{ item.text }}
                 </p>
@@ -196,7 +199,7 @@ const visions: VisionItem[] = [
             >
               卓越的研发驱动力
             </h4>
-            <p class="text-body md:text-h1 text-neutral-text2 leading-tight font-bold opacity-70">
+            <p class="text-body md:text-h2 text-neutral-text2 leading-tight font-bold opacity-70">
               只有保持对技术最纯粹的投入，才能在风险对抗中立于不败之地。
             </p>
           </div>

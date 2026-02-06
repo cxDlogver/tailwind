@@ -2,16 +2,15 @@
 import type { PropType } from 'vue'
 
 type Job = {
-  id: string
+  slug: string
   title: string
-  location: string
+  base?: Array<string>
 }
 
 const props = defineProps({
   job: { type: Object as PropType<Job>, required: true },
   image: { type: String, required: true },
   index: { type: Number, required: true },
-  onApply: { type: Function as PropType<(id: string) => void>, required: true },
 })
 
 const cardTransform = computed(() => {
@@ -20,9 +19,11 @@ const cardTransform = computed(() => {
   return `${yOffset} ${rotateOffset}`
 })
 
-function handleApplyClick(e: MouseEvent) {
+async function handleApplyClick(e: MouseEvent) {
   e.stopPropagation()
-  props.onApply(props.job.id)
+  // 获取单个岗位的申请信息
+  navigateTo(`/jobs/${props.job.slug}`)
+  // navigateTo(`/jobs/${data.value?.slug}`)
 }
 </script>
 
@@ -86,7 +87,7 @@ function handleApplyClick(e: MouseEvent) {
 
           <div class="mb-4 flex items-center gap-2 font-bold text-white/80">
             <Icon name="lucide:map-pin" class="text-primary-hover h-4.5 w-4.5" />
-            <span>{{ job.location }}</span>
+            <span class="text-body">{{ job.base?.join(' / ') || '面议' }}</span>
           </div>
         </div>
 

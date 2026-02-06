@@ -1,25 +1,12 @@
 <script setup lang="ts">
+import type { JobsCollectionItem } from '@nuxt/content'
 import { computed, ref } from 'vue'
 
-type Job = {
-  id: string
-  title: string
-  location: string
-}
-
-const props = defineProps<{
-  onSearch: (query: string) => void
-  onSelectJob: (id: string) => void
-}>()
+type Job = Pick<JobsCollectionItem, 'slug' | 'title' | 'base'>
 
 /** 数据都放在 Hero 内（符合你之前要求） */
-const RECENT_JOBS: Job[] = [
-  { id: 'job-001', title: '前端开发工程师（Nuxt）', location: '深圳 · 南山' },
-  { id: 'job-002', title: '后端开发工程师（Node/Nitro）', location: '武汉 · 光谷' },
-  { id: 'job-003', title: '安全研究员（AI 安全）', location: '深圳 · 南山' },
-  { id: 'job-004', title: '产品经理（合规方向）', location: '远程 / 混合' },
-  { id: 'job-005', title: '测试开发工程师（自动化）', location: '武汉 · 光谷' },
-]
+const { data } = useAllJobsWithFileds(['slug', 'title', 'base'] as const)
+const RECENT_JOBS = computed<Job[]>(() => (data.value ?? []) as Job[])
 
 const SKETCH_IMAGES = [
   'https://illustrations.popsy.co/gray/musician.svg',
@@ -34,7 +21,7 @@ const SKETCH_IMAGES = [
 const searchQuery = ref('')
 
 const jobList = computed(() => {
-  const list = [...RECENT_JOBS, ...RECENT_JOBS, ...RECENT_JOBS]
+  const list = [...RECENT_JOBS.value, ...RECENT_JOBS.value, ...RECENT_JOBS.value]
   return list.map((job, i) => ({
     job,
     image: SKETCH_IMAGES[i % SKETCH_IMAGES.length] as string,
@@ -42,60 +29,55 @@ const jobList = computed(() => {
   }))
 })
 
+function onKeydown(event: KeyboardEvent) {
+  if (event.key === 'Enter') {
+    handleSearchClick()
+  }
+}
+
+// 搜索按钮点击
 function handleSearchClick() {
-  props.onSearch(searchQuery.value)
-}
-
-function onKeydown(e: KeyboardEvent) {
-  if (e.key === 'Enter') handleSearchClick()
-}
-
-function applyJob(id: string) {
-  props.onSelectJob(id)
+  const query = searchQuery.value.trim()
+  if (query) {
+    const router = useRouter()
+    router.push({ path: '/jobs', query: { search: query } })
+  }
 }
 </script>
 
 <template>
-  <section
-    class="bg-neutral-bg relative flex min-h-[90vh] flex-col justify-center overflow-hidden pb-20"
-  >
-    <div
-      class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden select-none"
-    >
-      <h1
-        class="text-neutral-text1/5 translate-y-[-10%] text-[120px] leading-none font-black tracking-tighter whitespace-nowrap uppercase italic md:text-[16em]"
-      >
-        JOIN THE BAND
-      </h1>
-    </div>
-
-    <div class="relative z-20 container mx-auto mb-16 px-6 text-center md:text-left">
-      <div class="max-w-3xl">
-        <h2
-          class="text-h2 md:text-h4 text-neutral-text1 mb-4 leading-none font-black tracking-tight uppercase"
-        >
-          不仅仅是工作，这是一场<span class="text-primary italic">合奏</span>
-        </h2>
-        <p class="text-body md:text-h2 text-neutral-text2 max-w-xl font-bold opacity-80">
-          在缔零科技，我们相信最好的创新源于团队的默契。寻找你的角色，加入我们的乐章。
-        </p>
+  <div class="pb-32">
+    <section class="bg-neutral-bg main-card relative flex flex-col justify-center overflow-hidden">
+      <div class="relative z-20 container mx-auto mb-16 px-6 text-center md:text-left">
+        <div class="max-w-3xl">
+          <h2
+            class="text-h3 md:text-h1 text-neutral-text1 mb-4 leading-none font-black tracking-tight uppercase"
+          >
+            不仅仅是工作，这是一场<span class="text-primary italic">合奏</span>
+          </h2>
+          <p class="text-body md:text-h3 text-neutral-text2 max-w-xl font-bold opacity-80">
+            在缔零科技，我们相信最好的创新源于团队的默契。寻找你的角色，加入我们的乐章。
+          </p>
+        </div>
       </div>
-    </div>
-
+    </section>
     <div class="marquee-container relative z-30 w-full overflow-hidden">
+      <div
+        class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden select-none"
+      >
+        <h1
+          class="text-neutral-text1/5 translate-y-[-10%] text-[120px] leading-none font-black tracking-tighter whitespace-nowrap uppercase italic md:text-[16em]"
+        >
+          JOIN THE BAND
+        </h1>
+      </div>
       <div class="animate-marquee-slow flex w-max px-[10vw] hover:[animation-play-state:paused]">
-        <div v-for="item in jobList" :key="`${item.job.id}-${item.index}`" class="contents">
-          <JoinStackedCard
-            :job="item.job"
-            :image="item.image"
-            :index="item.index"
-            :on-apply="applyJob"
-          />
+        <div v-for="item in jobList" :key="`${item.job.slug}-${item.index}`" class="contents">
+          <JoinStackedCard :job="item.job" :image="item.image" :index="item.index" />
         </div>
       </div>
     </div>
-
-    <div class="relative z-40 container mx-auto mt-12 px-6">
+    <section class="main-card relative z-40 container mx-auto mt-12 px-6">
       <div class="mx-auto max-w-4xl">
         <div
           class="flex flex-col gap-3 rounded-3xl border border-white/50 bg-white/80 p-3 shadow-[0_50px_100px_rgba(0,0,0,0.15)] backdrop-blur-2xl md:flex-row md:rounded-full"
@@ -114,7 +96,7 @@ function applyJob(id: string) {
           </div>
           <button
             type="button"
-            class="bg-primary text-h1 hover:bg-primary-dark rounded-2xl px-12 py-5 font-black tracking-wider text-white uppercase shadow-xl transition-all hover:-translate-y-1 active:scale-95 md:rounded-full"
+            class="bg-primary text-h2 hover:bg-primary-dark rounded-2xl px-12 py-5 font-black tracking-wider text-white uppercase shadow-xl transition-all hover:-translate-y-1 active:scale-95 md:rounded-full"
             @click="handleSearchClick"
           >
             开始探索
@@ -134,8 +116,8 @@ function applyJob(id: string) {
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </template>
 
 <style scoped></style>
