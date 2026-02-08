@@ -3,10 +3,9 @@ import type { JobsCollectionItem } from '@nuxt/content'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-const { data } = useAllJobsWithFileds(['slug', 'title', 'category', 'type', 'base'] as const)
+// 获取所有岗位，只包含指定字段
+const { data } = useAllJobsWithFields(['slug', 'title', 'category', 'type', 'base'] as const)
 const RECENT_JOBS = computed<JobsCollectionItem[]>(() => (data.value ?? []) as JobsCollectionItem[])
-console.log(RECENT_JOBS.value)
-
 const CATEGORIES = computed(() => {
   const cats = Array.from(
     new Set(RECENT_JOBS.value.map((job) => job.category).filter((cat): cat is string => !!cat)),
@@ -15,8 +14,10 @@ const CATEGORIES = computed(() => {
   return ['全部职位', '实习生/校园招聘', ...cats]
 })
 
-const activeCategory = ref('全部职位')
-const search = ref((useRoute().query.search as string) || '')
+// 监听路由变化，更新筛选条件
+const route = useRoute()
+const activeCategory = ref((route.query.category as string) || '全部职位')
+const search = ref((route.query.search as string) || '')
 
 watch(
   () => [activeCategory.value, search.value],

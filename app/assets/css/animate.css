@@ -1,0 +1,114 @@
+@import 'tailwindcss';
+
+@theme {
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-marquee-slow: marquee 80s linear infinite;
+  --animate-marquee-slow-reverse: marquee-reverse 80s linear infinite;
+  --animate-marquee-fast: marquee 20s linear infinite;
+  --animate-marquee-fast-reverse: marquee-reverse 20s linear infinite;
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+/* 页面过渡动画：左右滑动淡入淡出 */
+@theme {
+  --page-enter-dur: 420ms;
+  --page-leave-dur: 360ms;
+  --page-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --page-shift: 50px; /* 位移幅度：越大越“滑动” */
+}
+
+@layer utilities {
+  /* enter-from / enter-to */
+  .page-slide-enter-from {
+    @apply opacity-0;
+    transform: translateX(var(--page-shift));
+  }
+  .page-slide-enter-to {
+    @apply opacity-100;
+    transform: translateX(0);
+  }
+
+  /* leave-from / leave-to */
+  .page-slide-leave-from {
+    @apply opacity-100;
+    transform: translateX(0);
+  }
+  .page-slide-leave-to {
+    @apply opacity-0;
+    transform: translateX(var(--page-shift));
+  }
+
+  /* enter-active / leave-active */
+  .page-slide-enter-active {
+    will-change: opacity, transform;
+    transition:
+      opacity var(--page-enter-dur) var(--page-ease),
+      transform var(--page-enter-dur) var(--page-ease);
+  }
+  .page-slide-leave-active {
+    will-change: opacity, transform;
+    transition:
+      opacity var(--page-leave-dur) var(--page-ease),
+      transform var(--page-leave-dur) var(--page-ease);
+  }
+}
+
+/** 组件出现过渡 **/
+@layer utilities {
+  /* 常驻：永远不移除，保证 transition 始终存在 */
+  .reveal-up {
+    will-change: opacity, transform;
+    transition:
+      opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* 初始：下沉 + 透明 */
+  .reveal-up--hidden {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+
+  /* 最终：到位 + 不透明 */
+  .reveal-up--in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-up {
+      transition: none;
+    }
+    .reveal-up--hidden,
+    .reveal-up--in {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

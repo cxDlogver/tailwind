@@ -5,7 +5,7 @@ import { computed, ref } from 'vue'
 type Job = Pick<JobsCollectionItem, 'slug' | 'title' | 'base'>
 
 /** 数据都放在 Hero 内（符合你之前要求） */
-const { data } = useAllJobsWithFileds(['slug', 'title', 'base'] as const)
+const { data } = useAllJobsWithFields(['slug', 'title', 'base'] as const)
 const RECENT_JOBS = computed<Job[]>(() => (data.value ?? []) as Job[])
 
 const SKETCH_IMAGES = [
@@ -21,7 +21,7 @@ const SKETCH_IMAGES = [
 const searchQuery = ref('')
 
 const jobList = computed(() => {
-  const list = [...RECENT_JOBS.value, ...RECENT_JOBS.value, ...RECENT_JOBS.value]
+  const list = [...RECENT_JOBS.value, ...RECENT_JOBS.value]
   return list.map((job, i) => ({
     job,
     image: SKETCH_IMAGES[i % SKETCH_IMAGES.length] as string,
@@ -48,7 +48,7 @@ function handleSearchClick() {
 <template>
   <div class="pb-32">
     <section class="bg-neutral-bg main-card relative flex flex-col justify-center overflow-hidden">
-      <div class="relative z-20 container mx-auto mb-16 px-6 text-center md:text-left">
+      <div class="relative z-20 container mb-16 px-6 text-center md:text-left">
         <div class="max-w-3xl">
           <h2
             class="text-h3 md:text-h1 text-neutral-text1 mb-4 leading-none font-black tracking-tight uppercase"
@@ -71,7 +71,7 @@ function handleSearchClick() {
           JOIN THE BAND
         </h1>
       </div>
-      <div class="animate-marquee-slow flex w-max px-[10vw] hover:[animation-play-state:paused]">
+      <div class="animate-marquee-slow flex w-max hover:[animation-play-state:paused]">
         <div v-for="item in jobList" :key="`${item.job.slug}-${item.index}`" class="contents">
           <JoinStackedCard :job="item.job" :image="item.image" :index="item.index" />
         </div>
@@ -96,7 +96,7 @@ function handleSearchClick() {
           </div>
           <button
             type="button"
-            class="bg-primary text-h2 hover:bg-primary-dark rounded-2xl px-12 py-5 font-black tracking-wider text-white uppercase shadow-xl transition-all hover:-translate-y-1 active:scale-95 md:rounded-full"
+            class="bg-primary text-h2 hover:bg-primary-dark cursor-pointer rounded-2xl px-12 py-5 font-black tracking-wider text-white uppercase shadow-xl transition-all hover:-translate-y-1 active:scale-95 md:rounded-full"
             @click="handleSearchClick"
           >
             开始探索

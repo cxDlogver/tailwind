@@ -1,7 +1,7 @@
 import type { JobsCollectionItem } from '@nuxt/content'
 
 // 获取所有岗位，但只包含指定字段
-export const useAllJobsWithFileds = (
+export const useAllJobsWithFields = (
   fields: (keyof JobsCollectionItem)[],
   options?: {
     order?: 'ASC' | 'DESC'

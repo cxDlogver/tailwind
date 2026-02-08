@@ -8,26 +8,27 @@ const HUBS: Hub[] = [
   {
     name: '武汉',
     en: 'WUHAN',
-    image:
-      'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800',
+    image: '/images/global-presence/wuhan.jpg',
   },
   {
     name: '北京',
     en: 'BEIJING',
-    image:
-      'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=800',
+    image: '/images/global-presence/beijing.jpg',
   },
   {
     name: '深圳',
     en: 'SHENZHEN',
-    image:
-      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800',
+    image: '/images/global-presence/shenzhen.jpg',
   },
   {
     name: '上海',
     en: 'SHANGHAI',
-    image:
-      'https://images.unsplash.com/photo-1431540015161-0bf868a2d407?auto=format&fit=crop&q=80&w=800',
+    image: '/images/global-presence/shanghai.jpg',
+  },
+  {
+    name: '咸宁',
+    en: 'XIANNING',
+    image: '/images/global-presence/xianning.jpg',
   },
 ]
 
@@ -37,11 +38,11 @@ const row2 = computed(() => [...row1.value].reverse())
 </script>
 
 <template>
-  <section id="locations" class="overflow-hidden py-16">
+  <section id="locations" class="relative overflow-hidden py-16">
     <!-- 头部 -->
-    <div class="container mx-auto mb-10 px-6">
+    <div class="main-card mb-10">
       <div
-        class="flex flex-col justify-between gap-6 border-b-[2px] border-black pb-8 md:flex-row md:items-end"
+        class="flex flex-col justify-between gap-6 border-b-2 border-black pb-8 md:flex-row md:items-end"
       >
         <div class="w-full">
           <div
@@ -49,11 +50,11 @@ const row2 = computed(() => [...row1.value].reverse())
           >
             Workspaces &amp; Studios
           </div>
-          <h2
-            class="text-h3 overflow-hidden leading-none font-black tracking-tighter text-ellipsis whitespace-nowrap text-black uppercase italic md:text-[56px]"
+          <h3
+            class="text-h4 md:text-h1 overflow-hidden leading-none font-black tracking-tighter text-ellipsis whitespace-nowrap text-black uppercase italic"
           >
             多城联动 · <span class="text-primary">办公环境</span>
-          </h2>
+          </h3>
         </div>
       </div>
     </div>
@@ -61,7 +62,7 @@ const row2 = computed(() => [...row1.value].reverse())
     <!-- 滚动区 -->
     <div class="marquee-container relative space-y-6 md:space-y-8">
       <!-- 第一行：向左 -->
-      <div class="animate-marquee-slow flex">
+      <div class="animate-marquee-fast flex">
         <JoinHubBrick
           v-for="(hub, idx) in row1"
           :key="`row1-${idx}`"
@@ -72,7 +73,7 @@ const row2 = computed(() => [...row1.value].reverse())
       </div>
 
       <!-- 第二行：向右 -->
-      <div class="animate-marquee-slow-reverse flex">
+      <div class="animate-marquee-fast-reverse flex">
         <JoinHubBrick
           v-for="(hub, idx) in row2"
           :key="`row2-${idx}`"

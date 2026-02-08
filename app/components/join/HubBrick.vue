@@ -9,14 +9,14 @@ defineProps<{
 
 <template>
   <div
-    class="bg-neutral-bg border-primary relative mx-3 flex h-[180px] w-[320px] flex-shrink-0 items-center overflow-hidden rounded-[2rem] border-[2px] shadow-sm md:h-[230px] md:w-[420px]"
+    class="bg-neutral-bg border-primary relative mx-3 flex h-45 w-[320px] shrink-0 items-center overflow-hidden rounded-4xl border-2 shadow-sm md:h-57.5 md:w-105"
   >
     <!-- 图片 -->
-    <div class="border-primary h-full w-[42%] overflow-hidden border-r-[2px]">
+    <div class="border-primary h-full w-[42%] overflow-hidden border-r-2">
       <img
         :src="image"
         :alt="name"
-        class="h-full w-full object-cover brightness-90 grayscale"
+        class="h-full w-full object-cover brightness-90"
         loading="lazy"
       />
     </div>
@@ -31,7 +31,7 @@ defineProps<{
         </span>
 
         <div class="flex items-center gap-3">
-          <div class="bg-primary h-[3px] w-8" />
+          <div class="bg-primary h-0.75 w-8" />
           <span class="text-[18px] font-bold tracking-tight text-black md:text-[20px]">
             {{ name }}
           </span>

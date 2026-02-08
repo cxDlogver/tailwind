@@ -50,7 +50,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="rootEl" class="mx-auto w-full max-w-lg" :class="isVisible ? 'enter-to' : 'enter-from'">
+  <div ref="rootEl" class="v-reveal-up mx-auto w-full max-w-lg">
     <div class="mb-4 px-2 text-left">
       <label
         class="text-primary font-mono text-[10px] font-bold tracking-[0.4em] uppercase select-none"
@@ -106,22 +106,4 @@ onBeforeUnmount(() => {
   </div>
 </template>
 
-<style scoped>
-/* 等价 motion: initial {opacity:0,y:20} -> inView {opacity:1,y:0} */
-.enter-from {
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 800ms ease,
-    transform 800ms ease;
-  will-change: opacity, transform;
-}
-.enter-to {
-  opacity: 1;
-  transform: translateY(0);
-  transition:
-    opacity 800ms ease,
-    transform 800ms ease;
-  will-change: opacity, transform;
-}
-</style>
+<style scoped></style>

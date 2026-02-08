@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="showBulletin"
-    class="bg-primary fixed top-0 left-0 z-1000 w-full overflow-hidden shadow-md"
-  >
+  <div class="bg-primary fixed top-0 left-0 z-1000 w-full overflow-hidden shadow-md">
     <div class="relative mx-auto flex max-w-screen-2xl items-center justify-center px-8 py-3">
       <div class="flex items-center gap-4">
         <p class="text-sm font-medium tracking-wider text-white md:text-base">
@@ -17,7 +14,7 @@
       </div>
       <button
         class="absolute right-8 rounded-full p-2 text-white/60 transition-all hover:bg-white/10 hover:text-white"
-        @click="showBulletin = false"
+        @click="emit('close')"
       >
         <Icon name="close" />
       </button>
@@ -26,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
-const showBulletin = ref(true) // 控制公告栏显示隐藏
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
 </script>

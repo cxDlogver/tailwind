@@ -3,7 +3,12 @@ import { computed } from 'vue'
 
 const currentYear = computed(() => new Date().getFullYear())
 
-const productItems = ['缔零法则', '政府解决方案', '智能安全硬件', '内容合规引擎'] as const
+const productItems = [
+  { label: '缔零法则', link: '/lawGenesis-Saas' },
+  { label: '政府解决方案', link: '#' },
+  { label: '智能安全硬件', link: '#' },
+  { label: '内容合规引擎', link: '#' },
+] as const
 </script>
 
 <template>
@@ -18,7 +23,7 @@ const productItems = ['缔零法则', '政府解决方案', '智能安全硬件'
           第一时间获取最新的行业深度报告与前沿技术简报，掌握数字变革的最新情报。
         </p>
       </div>
-      <LazyIndexNewsletterSubscription hydrate-on-visible />
+      <IndexNewsletterSubscription hydrate-on-visible />
     </section>
 
     <!-- =========================
@@ -44,12 +49,12 @@ const productItems = ['缔零法则', '政府解决方案', '智能安全硬件'
                 产品介绍
               </h4>
               <ul class="space-y-2">
-                <li v-for="item in productItems" :key="item">
+                <li v-for="item in productItems" :key="item.label">
                   <NuxtLink
-                    to="#"
+                    :to="item.link"
                     class="hover:text-primary text-[12px] whitespace-nowrap text-[#666666] transition-all"
                   >
-                    {{ item }}
+                    {{ item.label }}
                   </NuxtLink>
                 </li>
               </ul>

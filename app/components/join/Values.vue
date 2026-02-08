@@ -69,11 +69,11 @@ const CORE_VALUES: CoreValue[] = [
 
 const activeIndex = ref(0)
 
-const activeItem = computed(() => CORE_VALUES[activeIndex.value])
+const activeItem = computed(() => CORE_VALUES[activeIndex.value] as CoreValue)
 </script>
 
 <template>
-  <section class="bg-neutral-bg overflow-hidden py-20">
+  <section class="bg-neutral-bg main-card overflow-hidden py-20">
     <div class="container mx-auto px-6">
       <!-- 顶部标题 -->
       <div class="mb-12 flex flex-col items-center text-center">
@@ -87,7 +87,7 @@ const activeItem = computed(() => CORE_VALUES[activeIndex.value])
         </div>
 
         <h2
-          class="text-h3 md:text-h4 text-neutral-text1 font-black tracking-tighter uppercase italic"
+          class="text-h2 md:text-h1 text-neutral-text1 font-black tracking-tighter uppercase italic"
         >
           我们如何回馈你的<span class="text-primary">专业</span>
         </h2>
@@ -118,7 +118,7 @@ const activeItem = computed(() => CORE_VALUES[activeIndex.value])
               loading="lazy"
             />
             <div class="bg-primary/10 absolute inset-0 mix-blend-overlay" />
-            <div class="from-primary/40 absolute inset-0 bg-gradient-to-tr to-transparent" />
+            <div class="from-primary/40 absolute inset-0 bg-linear-to-tr to-transparent" />
           </div>
 
           <!-- 悬浮装饰 -->
@@ -154,14 +154,14 @@ const activeItem = computed(() => CORE_VALUES[activeIndex.value])
           >
             <div class="relative z-10 flex items-center gap-6">
               <span
-                class="text-h2 w-10 font-black italic transition-colors duration-300"
+                class="text-h3 w-10 font-black italic transition-colors duration-300"
                 :class="index === activeIndex ? 'text-primary' : 'text-neutral-text4'"
               >
                 {{ value.number }}
               </span>
 
               <h3
-                class="text-h2 font-bold transition-all duration-300"
+                class="text-h3 font-bold transition-all duration-300"
                 :class="index === activeIndex ? 'text-primary translate-x-1' : 'text-neutral-text1'"
               >
                 {{ value.title.split('：')[0] }}

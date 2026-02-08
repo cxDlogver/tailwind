@@ -13,7 +13,7 @@ const job = (await $fetch(`/api/jobs/${encodeURIComponent(jobSlug)}`)) as JobsCo
     <div class="bg-neutral-text1 relative overflow-hidden py-20 text-white">
       <div class="bg-primary/10 absolute top-0 right-0 h-full w-1/3 translate-x-1/2 skew-x-12" />
 
-      <div class="main-card relative z-10 container mx-auto px-6">
+      <div class="relative z-10 container mx-auto px-32">
         <button
           type="button"
           class="mb-12 flex cursor-pointer items-center gap-2 font-bold text-white/60 transition-colors hover:text-white"
@@ -30,7 +30,7 @@ const job = (await $fetch(`/api/jobs/${encodeURIComponent(jobSlug)}`)) as JobsCo
             {{ job.category ?? '研发组' }}
           </span>
 
-          <h1 class="text-h4 mb-8 leading-none font-bold tracking-tighter md:text-[72px]">
+          <h1 class="text-h4 mb-8 leading-none font-bold tracking-tighter md:text-[60px]">
             {{ job.title }}
           </h1>
 
@@ -57,7 +57,7 @@ const job = (await $fetch(`/api/jobs/${encodeURIComponent(jobSlug)}`)) as JobsCo
     </div>
 
     <!-- Content -->
-    <div class="relative z-20 container mx-auto -mt-10 px-6">
+    <div class="relative z-20 container mx-auto -mt-10 px-32">
       <div class="grid grid-cols-1 gap-12 lg:grid-cols-3">
         <!-- Main Content -->
         <div
@@ -81,7 +81,7 @@ const job = (await $fetch(`/api/jobs/${encodeURIComponent(jobSlug)}`)) as JobsCo
             <button
               type="button"
               class="text-primary text-h4 mb-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-white py-5 font-black shadow-lg transition-transform hover:scale-105"
-              @click="() => {}"
+              @click="navigateTo('/join/process')"
             >
               立即申请
               <Icon name="lucide:arrow-right" class="h-5 w-5" />

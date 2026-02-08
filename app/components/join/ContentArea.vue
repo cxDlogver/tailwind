@@ -36,11 +36,6 @@ const BLOG_POSTS: BlogPost[] = [
   },
 ]
 
-function goBlogCenter() {
-  // TODO: 你接入真实路由后替换
-  // const router = useRouter(); router.push('/blog')
-}
-
 function openPost(href?: string) {
   // TODO: 你接入真实路由后替换
   if (!href) return
@@ -49,8 +44,8 @@ function openPost(href?: string) {
 </script>
 
 <template>
-  <section id="culture" class="bg-neutral-bg py-24">
-    <div class="container mx-auto px-6">
+  <section id="culture" class="bg-neutral-bg main-card py-24">
+    <div class="container">
       <div class="mb-16 flex flex-col items-end justify-between gap-6 md:flex-row">
         <div>
           <div class="mb-4 flex items-center gap-2">
@@ -61,14 +56,14 @@ function openPost(href?: string) {
               >感受@缔零科技</span
             >
           </div>
-          <h2 class="text-h3 text-neutral-text1 font-bold tracking-tight">
+          <h2 class="text-neutral-text1 text-2xl font-bold tracking-tight">
             探索技术与人文交织的真实笔触
           </h2>
         </div>
 
         <button
           type="button"
-          class="text-primary text-body font-bold underline-offset-8 hover:underline"
+          class="text-primary text-body cursor-pointer font-bold underline-offset-8 hover:underline"
           @click="navigateTo('/news')"
         >
           前往博客中心
@@ -97,7 +92,7 @@ function openPost(href?: string) {
 
           <div class="flex flex-1 flex-col p-8">
             <h3
-              class="text-h2 group-hover:text-primary text-neutral-text1 mb-4 leading-tight font-bold transition-colors"
+              class="text-h3 group-hover:text-primary text-neutral-text1 mb-4 leading-tight font-bold transition-colors"
             >
               {{ post.title }}
             </h3>
@@ -107,11 +102,11 @@ function openPost(href?: string) {
 
             <button
               type="button"
-              class="text-neutral-text1 hover:text-primary text-support flex items-center gap-2 font-bold tracking-widest uppercase transition-colors"
+              class="text-neutral-text1 hover:text-primary text-support flex cursor-pointer items-center gap-2 font-bold tracking-widest uppercase transition-colors"
               @click="openPost(post.href)"
             >
               阅读文章
-              <Icon name="lucide:arrow-up-right" class="h-[18px] w-[18px]" />
+              <Icon name="lucide:arrow-up-right" class="h-4.5 w-4.5" />
             </button>
           </div>
         </div>

@@ -425,13 +425,10 @@ function toggleExpand(label: string) {
 @layer components {
   /* hover 背景英文字过渡 */
   .fs-ghost-enter-active {
-    transition:
-      opacity 260ms ease,
-      transform 260ms ease;
+    @apply transition-[opacity,transform] duration-260;
   }
   .fs-ghost-enter-from {
-    opacity: 0;
-    transform: translate3d(-20px, -50%, 0) scale(0.98);
+    @apply scale-98 transform-[translate3d(-20px,-50%,0)] opacity-0;
   }
 }
 </style>

@@ -1,14 +1,13 @@
 import tailwindcss from '@tailwindcss/vite'
-import { fileURLToPath } from 'url'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
-
-const rootDir = fileURLToPath(new URL('./', import.meta.url))
 
 export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxt/content'],
   devtools: { enabled: true },
+  app: {
+    pageTransition: { name: 'page-slide', mode: 'out-in' },
+  },
   css: ['~/assets/css/main.css', '~/assets/css/animate.css'],
-
   devServer: {
     host: '0.0.0.0',
     port: 3000,
@@ -16,14 +15,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   vite: {
     plugins: [tailwindcss(), viteTsconfigPaths()],
-    resolve: {
-      alias: {
-        '~': rootDir,
-        '~~': rootDir,
-        '@': rootDir,
-        '@@': rootDir,
-      },
-    },
   },
   eslint: {
     checker: true, // 开发时实时检查

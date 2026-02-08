@@ -58,7 +58,7 @@ const rowBItems = computed(() => [...partnerData.value, ...partnerData.value])
 </script>
 
 <template>
-  <div class="mb-20 w-full lg:mb-40">
+  <div class="component-fade mb-20 w-full lg:mb-40">
     <div class="relative flex min-h-50 flex-col items-center justify-center">
       <div
         class="relative z-10 text-center text-4xl font-bold tracking-tight text-black md:text-6xl"
@@ -75,7 +75,7 @@ const rowBItems = computed(() => [...partnerData.value, ...partnerData.value])
       <div class="bg-primary relative z-10 mt-8 h-1 w-20 rounded-full" />
     </div>
 
-    <div class="relative z-10 scale-105 -rotate-1 lg:-rotate-1">
+    <div class="relative z-10 scale-95 -rotate-1 lg:-rotate-1">
       <div
         class="from-surface-muted via-surface-muted/90 pointer-events-none absolute inset-y-0 left-0 z-20 w-[15vw] bg-linear-to-r to-transparent"
       ></div>
@@ -90,7 +90,7 @@ const rowBItems = computed(() => [...partnerData.value, ...partnerData.value])
           </div>
         </div>
 
-        <div class="w-full overflow-hidden py-2 select-none">
+        <div class="group w-full overflow-hidden py-2 select-none">
           <div class="marquee-track marquee-reverse" style="--marquee-duration: 50s">
             <IndexPartnersCard v-for="(item, i) in rowBItems" :key="`b-${i}`" :item="item" />
           </div>
@@ -110,6 +110,9 @@ const rowBItems = computed(() => [...partnerData.value, ...partnerData.value])
   animation: marquee var(--marquee-duration, 50s) linear infinite;
   will-change: transform;
 }
+.marquee-track:hover {
+  animation-play-state: paused;
+}
 .marquee-reverse {
   animation-direction: reverse;
 }
@@ -118,7 +121,7 @@ const rowBItems = computed(() => [...partnerData.value, ...partnerData.value])
     transform: translateX(0%);
   }
   to {
-    transform: translateX(-80%);
+    transform: translateX(-50%);
   }
 }
 </style>

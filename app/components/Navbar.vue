@@ -1,9 +1,12 @@
 <template>
   <div>
     <!-- Bulletin -->
-    <Bulletin />
+    <Bulletin v-if="isBulletinOpen" @close="isBulletinOpen = false" />
     <!-- Navbar Section -->
-    <div class="pointer-events-none fixed top-10 left-0 z-50 flex w-full justify-center px-6 pt-6">
+    <div
+      class="pointer-events-none fixed left-0 z-50 flex w-full justify-center px-6 pt-6 transition-[padding-top] duration-420"
+      :class="`${isBulletinOpen ? 'pt-16' : 'pt-0'}`"
+    >
       <nav
         class="pointer-events-auto flex w-full max-w-7xl items-center justify-between rounded-full border border-white/40 bg-white/70 px-10 py-4 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.08)] backdrop-blur-2xl"
       >
@@ -81,12 +84,16 @@
       </nav>
     </div>
     <!-- Fullscreen Menu -->
-    <FullMenu v-if="isMenuOpen" @switch-menu-open="SwitchMenuOpen" />
+    <Transition name="full-menu-fade">
+      <FullMenu v-if="isMenuOpen" @switch-menu-open="SwitchMenuOpen" />
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+
+const isBulletinOpen = ref(true)
 
 const isMenuOpen = ref(false)
 const SwitchMenuOpen = (value: boolean) => {
@@ -95,15 +102,15 @@ const SwitchMenuOpen = (value: boolean) => {
 </script>
 
 <style scoped>
-/* CSS Transition for the Fade Effect */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
+@layer components {
+  /* 全屏菜单向左划入，向右划出 */
+  .full-menu-fade-enter-active,
+  .full-menu-fade-leave-active {
+    @apply transition-transform duration-420;
+  }
+  .full-menu-fade-enter-from,
+  .full-menu-fade-leave-to {
+    @apply translate-x-full;
+  }
 }
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* Optional additional styling here */
 </style>

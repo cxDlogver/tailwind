@@ -18,6 +18,7 @@ type BusinessItem = {
   innerPadding: string // 内部内容内边距类
   iconName: string // 图标名称
   audienceIconName: string // 受众图标名称
+  href: string // 了解更多链接
 }
 
 // 临时数据
@@ -31,13 +32,14 @@ const businessItems = computed<BusinessItem[]>(() => [
     iconName: 'i-lucide-briefcase',
     audienceIconName: 'i-lucide-building',
     gridClass: 'col-start-1 row-start-1',
-    roundedClass: 'rounded-tl-[140px] rounded-tr-[30px] rounded-bl-[30px] rounded-br-[10px]',
+    roundedClass: 'rounded-tl-[200px] ',
     slideX: -250,
     slideY: -250,
     rotateX: 18,
     rotateY: -18,
     coverPadding: 'pt-8 pb-8 pl-12 pr-8',
     innerPadding: 'pt-12 pb-12 pl-16 pr-12',
+    href: '/lawGenesis-SaaS',
   },
   {
     id: 'tog',
@@ -48,13 +50,14 @@ const businessItems = computed<BusinessItem[]>(() => [
     iconName: 'i-lucide-landmark',
     audienceIconName: 'i-lucide-landmark',
     gridClass: 'col-start-2 row-start-1',
-    roundedClass: 'rounded-tr-[140px] rounded-tl-[30px] rounded-br-[30px] rounded-bl-[10px]',
+    roundedClass: 'rounded-tr-[200px]',
     slideX: 250,
     slideY: -250,
     rotateX: 18,
     rotateY: 18,
     coverPadding: 'pt-8 pb-8 pr-12 pl-8',
     innerPadding: 'pt-12 pb-12 pr-16 pl-12',
+    href: '/lawGenesis-SaaS',
   },
   {
     id: 'tosmb',
@@ -65,13 +68,14 @@ const businessItems = computed<BusinessItem[]>(() => [
     iconName: 'i-lucide-clapperboard',
     audienceIconName: 'i-lucide-video',
     gridClass: 'col-start-2 row-start-2',
-    roundedClass: 'rounded-br-[280px] rounded-tr-[30px] rounded-tl-[10px] rounded-bl-[0px]',
+    roundedClass: 'rounded-br-[200px] ',
     slideX: 220,
     slideY: 220,
     rotateX: -18,
     rotateY: 18,
     coverPadding: 'pb-28 pt-12 pr-16 pl-8',
     innerPadding: 'pb-40 pt-28 pr-24 pl-12',
+    href: '/lawGenesis-SaaS',
   },
   {
     id: 'toc',
@@ -82,13 +86,14 @@ const businessItems = computed<BusinessItem[]>(() => [
     iconName: 'i-lucide-heart-handshake',
     audienceIconName: 'i-lucide-baby',
     gridClass: 'col-start-1 row-start-2',
-    roundedClass: 'rounded-bl-[280px] rounded-tl-[30px] rounded-tr-[10px] rounded-br-[0px]',
+    roundedClass: 'rounded-bl-[200px] ',
     slideX: -220,
     slideY: 240,
     rotateX: -18,
     rotateY: -18,
     coverPadding: 'pb-28 pt-12 pl-16 pr-8',
     innerPadding: 'pb-40 pt-28 pl-24 pr-12',
+    href: '/lawGenesis-SaaS',
   },
 ])
 
@@ -223,6 +228,7 @@ function coverStyle(item: BusinessItem) {
 
               <button
                 class="flex items-center gap-2 rounded-full bg-white px-5 py-2 text-[10px] font-black tracking-[0.2em] text-[#3B7073] uppercase shadow-xl shadow-black/10 transition-all hover:scale-[1.05] active:scale-[0.95]"
+                @click="navigateTo(item.href)"
               >
                 了解更多
                 <Icon name="i-lucide-external-link" class="bg-primary size-3" />
@@ -241,7 +247,7 @@ function coverStyle(item: BusinessItem) {
                 :class="
                   hoveredId === item.id
                     ? 'bg-primary scale-110 rotate-360 text-white shadow-2xl'
-                    : 'text-primary bg-sufface-muted'
+                    : 'text-primary bg-surface-muted'
                 "
               >
                 <Icon :name="item.iconName" class="size-8" />

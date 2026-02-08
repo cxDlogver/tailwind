@@ -3,7 +3,7 @@ import type { JobsCollectionItem } from '@nuxt/content'
 import { computed } from 'vue'
 
 const MAX_FEATURED_JOBS = 5
-const { data } = useAllJobsWithFileds(
+const { data } = useAllJobsWithFields(
   ['id', 'slug', 'title', 'category', 'type', 'base'] as const,
   {
     limit: MAX_FEATURED_JOBS,
@@ -16,7 +16,7 @@ const featured = computed<JobsCollectionItem[]>(() => (data.value ?? []) as Jobs
   <section
     class="bg-neutral-bg border-neutral-divider main-card relative overflow-hidden border-b pb-24"
   >
-    <div class="relative z-10 container mx-auto px-6">
+    <div class="relative z-10 container">
       <div class="mb-12 flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
         <div class="max-w-2xl">
           <div class="mb-4 flex items-center gap-2">
