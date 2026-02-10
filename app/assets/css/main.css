@@ -34,7 +34,7 @@
   --color-brand-ext-1: oklch(24.67% 0.1553 267.1); /* 深蓝强调 */
   --color-brand-ext-2: oklch(58.61% 0.0934 182.7); /* 青绿次强调（hover/secondary 场景） */
   --color-brand-ext-3: oklch(74.82% 0.064 185.6); /* 浅青柔和强调（标签/弱强调底） */
-  --color-brand-ext-4: oklch(95.79% 0.018 201.1); /* 极浅青（淡背景/浅铺底） */
+  --color-brand-ext-4: oklch(95.79% 0.018 201.1); /* 极浅青（淡背景/浅铺底*/
   --bg-brand-gradient: linear-gradient(
     90deg,
     oklch(80.31% 0.1836 158.1) 0%,
@@ -80,7 +80,6 @@
   --color-neutral-text1: var(--color-text-primary); /* #333333 */
   --color-neutral-text2: var(--color-text-regular); /* #666666 */
   --color-neutral-text3: var(--color-text-secondary); /* #999999 */
-  --color-neutral-text4: var(--color-text-placeholder); /* #BBBBBB */
   --color-neutral-divider: var(--color-divider); /* #E7E7E7 */
   --color-neutral-bg: var(--color-surface-muted); /* #F9F9F9 / 语义背景 */
   --color-neutral-light: var(--color-text-placeholder); /* #BBBBBB */

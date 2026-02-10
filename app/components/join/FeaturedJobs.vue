@@ -2,7 +2,7 @@
 import type { JobsCollectionItem } from '@nuxt/content'
 import { computed } from 'vue'
 
-const MAX_FEATURED_JOBS = 5
+const MAX_FEATURED_JOBS = 4
 const { data } = useAllJobsWithFields(
   ['id', 'slug', 'title', 'category', 'type', 'base'] as const,
   {
@@ -56,9 +56,9 @@ const featured = computed<JobsCollectionItem[]>(() => (data.value ?? []) as Jobs
               </span>
 
               <div
-                class="bg-primary-light text-primary group-hover:bg-primary flex h-12 w-12 items-center justify-center rounded-xl transition-all group-hover:text-white"
+                class="bg-primary/10 text-primary group-hover:bg-primary flex h-12 w-12 items-center justify-center rounded-xl transition-all group-hover:text-white"
               >
-                <Icon name="lucide:play" class="h-4.5 w-4.5" />
+                <Icon name="heroicons:play-solid" class="h-4.5 w-4.5" />
               </div>
             </div>
 
@@ -66,9 +66,9 @@ const featured = computed<JobsCollectionItem[]>(() => (data.value ?? []) as Jobs
             <div class="min-w-0 flex-1">
               <div class="mb-1.5 flex items-center gap-3">
                 <span
-                  class="text-primary bg-primary-light rounded px-2 py-0.5 text-[10px] font-black tracking-widest uppercase"
+                  class="text-primary bg-primary/10 rounded px-2 py-0.5 text-[10px] font-black tracking-widest uppercase"
                 >
-                  <!-- {{ pickCategoryLabel(job.category) }} -->
+                  {{ job.category }}
                 </span>
                 <span class="text-neutral-text3 text-[10px] font-bold uppercase opacity-60"
                   >/ {{ job.type }}</span
@@ -76,7 +76,7 @@ const featured = computed<JobsCollectionItem[]>(() => (data.value ?? []) as Jobs
               </div>
 
               <h3
-                class="text-h3 md:text-h2 text-neutral-text1 group-hover:text-primary truncate leading-tight font-black transition-colors"
+                class="text-h4 md:text-h3 text-neutral-text1 group-hover:text-primary truncate leading-tight font-black transition-colors"
               >
                 {{ job.title }}
               </h3>

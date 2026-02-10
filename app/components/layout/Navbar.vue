@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Bulletin -->
-    <Bulletin v-if="isBulletinOpen" @close="isBulletinOpen = false" />
+    <LayoutBulletin v-if="isBulletinOpen" @close="isBulletinOpen = false" />
     <!-- Navbar Section -->
     <div
       class="pointer-events-none fixed left-0 z-50 flex w-full justify-center px-6 pt-6 transition-[padding-top] duration-420"
@@ -85,7 +85,7 @@
     </div>
     <!-- Fullscreen Menu -->
     <Transition name="full-menu-fade">
-      <FullMenu v-if="isMenuOpen" @switch-menu-open="SwitchMenuOpen" />
+      <LayoutFullMenu v-if="isMenuOpen" @switch-menu-open="SwitchMenuOpen" />
     </Transition>
   </div>
 </template>

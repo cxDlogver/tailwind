@@ -18,7 +18,7 @@ type BusinessItem = {
   innerPadding: string // 内部内容内边距类
   iconName: string // 图标名称
   audienceIconName: string // 受众图标名称
-  href: string // 了解更多链接
+  link: string // 了解更多链接
 }
 
 // 临时数据
@@ -32,14 +32,14 @@ const businessItems = computed<BusinessItem[]>(() => [
     iconName: 'i-lucide-briefcase',
     audienceIconName: 'i-lucide-building',
     gridClass: 'col-start-1 row-start-1',
-    roundedClass: 'rounded-tl-[200px] ',
+    roundedClass: 'rounded-tl-full justify-end',
     slideX: -250,
     slideY: -250,
     rotateX: 18,
     rotateY: -18,
-    coverPadding: 'pt-8 pb-8 pl-12 pr-8',
-    innerPadding: 'pt-12 pb-12 pl-16 pr-12',
-    href: '/lawGenesis-SaaS',
+    coverPadding: 'pb-20 pr-15 items-center justify-end',
+    innerPadding: 'pb-15 pr-10 items-center justify-end text-center',
+    link: '/lawGenesis-SaaS',
   },
   {
     id: 'tog',
@@ -50,14 +50,14 @@ const businessItems = computed<BusinessItem[]>(() => [
     iconName: 'i-lucide-landmark',
     audienceIconName: 'i-lucide-landmark',
     gridClass: 'col-start-2 row-start-1',
-    roundedClass: 'rounded-tr-[200px]',
+    roundedClass: 'rounded-tr-full justify-start',
     slideX: 250,
     slideY: -250,
     rotateX: 18,
     rotateY: 18,
-    coverPadding: 'pt-8 pb-8 pr-12 pl-8',
-    innerPadding: 'pt-12 pb-12 pr-16 pl-12',
-    href: '/lawGenesis-SaaS',
+    coverPadding: 'pb-20 pl-15 items-center justify-end',
+    innerPadding: 'pb-15 pl-10 items-center justify-end text-center',
+    link: '/lawGenesis-SaaS',
   },
   {
     id: 'tosmb',
@@ -68,14 +68,14 @@ const businessItems = computed<BusinessItem[]>(() => [
     iconName: 'i-lucide-clapperboard',
     audienceIconName: 'i-lucide-video',
     gridClass: 'col-start-2 row-start-2',
-    roundedClass: 'rounded-br-[200px] ',
+    roundedClass: 'rounded-br-full justify-start',
     slideX: 220,
     slideY: 220,
     rotateX: -18,
     rotateY: 18,
-    coverPadding: 'pb-28 pt-12 pr-16 pl-8',
-    innerPadding: 'pb-40 pt-28 pr-24 pl-12',
-    href: '/lawGenesis-SaaS',
+    coverPadding: 'pt-18 pl-15 items-center justify-start',
+    innerPadding: 'pt-18 pl-10 items-center justify-start text-center',
+    link: '/lawGenesis-SaaS',
   },
   {
     id: 'toc',
@@ -86,14 +86,14 @@ const businessItems = computed<BusinessItem[]>(() => [
     iconName: 'i-lucide-heart-handshake',
     audienceIconName: 'i-lucide-baby',
     gridClass: 'col-start-1 row-start-2',
-    roundedClass: 'rounded-bl-[200px] ',
+    roundedClass: 'rounded-bl-full justify-end',
     slideX: -220,
     slideY: 240,
     rotateX: -18,
     rotateY: -18,
-    coverPadding: 'pb-28 pt-12 pl-16 pr-8',
-    innerPadding: 'pb-40 pt-28 pl-24 pr-12',
-    href: '/lawGenesis-SaaS',
+    coverPadding: 'pt-15 pr-15 items-center justify-start',
+    innerPadding: 'pt-18 pr-10 items-center justify-start text-center',
+    link: '/lawGenesis-SaaS',
   },
 ])
 
@@ -183,13 +183,15 @@ function coverStyle(item: BusinessItem) {
     </div>
 
     <!-- 右侧产品矩阵 -->
-    <div class="relative flex h-160 w-full shrink-0 items-center justify-center p-4 md:w-160">
+    <div
+      class="relative flex h-180 w-full shrink-0 items-center justify-center p-4 md:w-180 md:translate-x-24 md:transform"
+    >
       <div
         class="pointer-events-none absolute inset-[-10%] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,112,115,0.06)_0%,transparent_70%)]"
       />
 
       <div
-        class="absolute inset-0 z-10 grid grid-cols-2 grid-rows-2 gap-1"
+        class="absolute inset-0 z-10 grid grid-cols-2 grid-rows-2 gap-px"
         :style="{ perspective: '30000px' }"
       >
         <div
@@ -202,14 +204,14 @@ function coverStyle(item: BusinessItem) {
         >
           <!-- 内部矩阵 -->
           <div
-            class="bg-primary absolute inset-0 z-0 overflow-hidden shadow-[inset_0_20px_60px_rgba(0,0,0,0.25)] transition-all duration-700"
+            class="bg-primary absolute inset-0 z-0 flex overflow-hidden shadow-[inset_0_20px_60px_rgba(0,0,0,0.25)] transition-all duration-700"
             :class="item.roundedClass"
           >
             <div
               class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.05)_0%,transparent_80%)]"
             />
             <div
-              class="relative z-10 flex h-full w-full flex-col items-center justify-center space-y-4 text-center text-white"
+              class="relative z-10 flex h-full max-w-67 flex-col space-y-4 text-white"
               :class="item.innerPadding"
             >
               <div class="space-y-2">
@@ -219,7 +221,7 @@ function coverStyle(item: BusinessItem) {
                 <div class="mx-auto h-1 w-8 rounded-full bg-white/20" />
               </div>
 
-              <p class="max-w-50 text-xs leading-relaxed font-light opacity-90 md:text-sm">
+              <p class="max-w-65 text-xs leading-relaxed font-light opacity-90 md:text-sm">
                 <template v-for="(part, idx) in parseDetail(item.detail)" :key="idx">
                   <b v-if="part.bold" class="font-black text-white">{{ part.text }}</b>
                   <span v-else>{{ part.text }}</span>
@@ -228,7 +230,7 @@ function coverStyle(item: BusinessItem) {
 
               <button
                 class="flex items-center gap-2 rounded-full bg-white px-5 py-2 text-[10px] font-black tracking-[0.2em] text-[#3B7073] uppercase shadow-xl shadow-black/10 transition-all hover:scale-[1.05] active:scale-[0.95]"
-                @click="navigateTo(item.href)"
+                @click="navigateTo(item.link)"
               >
                 了解更多
                 <Icon name="i-lucide-external-link" class="bg-primary size-3" />
@@ -237,11 +239,14 @@ function coverStyle(item: BusinessItem) {
           </div>
           <!-- 外层矩阵 -->
           <div
-            class="border-surface-muted absolute inset-0 z-10 flex flex-col items-center justify-center overflow-hidden border bg-white transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
-            :class="[item.roundedClass, item.coverPadding]"
+            class="border-surface-muted absolute inset-0 z-10 flex overflow-hidden border bg-white transition-[transform,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform"
+            :class="item.roundedClass"
             :style="coverStyle(item)"
           >
-            <div class="relative z-10 flex w-full flex-col items-center gap-6 text-center">
+            <div
+              class="relative z-10 flex max-w-65 flex-col gap-6 text-center"
+              :class="item.coverPadding"
+            >
               <div
                 class="transform rounded-[2.5rem] p-6 transition-all duration-1000"
                 :class="
@@ -265,7 +270,7 @@ function coverStyle(item: BusinessItem) {
                   {{ item.title }}
                 </div>
               </div>
-              <div
+              <!-- <div
                 class="border-surface-muted absolute -top-5 right-5 flex h-10 w-10 items-center justify-center rounded-full border transition-all"
                 :class="
                   hoveredId === item.id
@@ -274,7 +279,7 @@ function coverStyle(item: BusinessItem) {
                 "
               >
                 <Icon :name="item.audienceIconName" class="size-4" />
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

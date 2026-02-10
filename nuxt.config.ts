@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxt/content'],
   devtools: { enabled: true },
   app: {
-    pageTransition: { name: 'page-slide', mode: 'out-in' },
+    pageTransition: { name: 'page-slide' },
   },
   css: ['~/assets/css/main.css', '~/assets/css/animate.css'],
   devServer: {
@@ -44,7 +44,11 @@ export default defineNuxtConfig({
     customCollections: [
       {
         prefix: 'my-icon',
-        dir: './assets/icons',
+        dir: './app/assets/icons',
+      },
+      {
+        prefix: 'my-job',
+        dir: './app/assets/icons/jobs',
       },
     ],
   },

@@ -71,8 +71,8 @@ const job = (await $fetch(`/api/jobs/${encodeURIComponent(jobSlug)}`)) as JobsCo
         </div>
 
         <!-- Sidebar -->
-        <div class="space-y-8 lg:col-span-1">
-          <div class="bg-primary sticky top-32 rounded-[2.5rem] p-10 text-white shadow-2xl">
+        <div class="space-y-8">
+          <div class="bg-primary sticky top-48 rounded-[2.5rem] p-10 text-white shadow-2xl">
             <h3 class="text-h2 mb-6 font-bold">感兴趣？</h3>
             <p class="mb-10 font-medium text-white/80">
               如果你已经准备好重构规则，植入确定的安全原力，现在就开始你的申请吧。

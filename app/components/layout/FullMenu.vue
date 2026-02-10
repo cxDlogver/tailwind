@@ -183,9 +183,8 @@
                     v-for="(sub, idx) in subProducts"
                     :key="sub.name"
                     type="button"
-                    class="group/sub hover:border-primary/20 hover:bg-primary hover:shadow-primary/20 relative flex flex-col gap-1 rounded-2xl border border-[#EEEEEE] bg-[#F4F7F7]/60 px-6 py-4 text-left shadow-sm transition-all duration-500 hover:shadow-2xl"
-                    :style="{ transitionDelay: `${idx * 0.08}s` }"
-                    @click="handleLinkClick(sub.href)"
+                    class="group/sub hover:border-primary/20 hover:bg-primary hover:shadow-primary/20 relative flex cursor-pointer flex-col gap-1 rounded-2xl border border-[#EEEEEE] bg-[#F4F7F7]/60 px-6 py-4 text-left shadow-sm transition-all duration-300 hover:shadow-2xl"
+                    @click="handleLinkClick(sub.link)"
                   >
                     <div class="flex items-start justify-between">
                       <span
@@ -321,15 +320,15 @@ const NAV_ENGLISH: Record<string, string> = {
 }
 
 const subProducts = [
-  { name: '缔零法则', href: '#products', desc: '分布式审计协议' },
-  { name: '政府解决方案', href: '#solutions', desc: '国家级安全保障' },
-  { name: '内容合规引擎', href: '#solutions', desc: 'AIGC 实时防御' },
-  { name: '智能安全硬件', href: '#products', desc: '端侧隐私反诈' },
+  { name: '缔零法则', link: '/lawGenesis-SaaS', desc: '分布式审计协议' },
+  { name: '政府解决方案', link: '/lawGenesis-SaaS', desc: '国家级安全保障' },
+  { name: '内容合规引擎', link: '/lawGenesis-SaaS', desc: 'AIGC 实时防御' },
+  { name: '智能安全硬件', link: '/lawGenesis-SaaS', desc: '端侧隐私反诈' },
 ] as const
 
 /** hash + 页面状态映射（尽量贴近你原 React 逻辑） */
-function handleLinkClick(href: string) {
-  navigateTo(href)
+function handleLinkClick(link: string) {
+  navigateTo(link)
   emit('switch-menu-open', false)
 }
 

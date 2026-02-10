@@ -95,11 +95,11 @@ const activeItem = computed(() => CORE_VALUES[activeIndex.value] as CoreValue)
 
       <!-- 主体卡片 -->
       <div
-        class="border-neutral-divider flex min-h-[600px] w-full flex-col overflow-hidden rounded-[3rem] border bg-white shadow-2xl lg:flex-row"
+        class="border-neutral-divider flex min-h-150 w-full flex-col overflow-hidden rounded-[3rem] border bg-white shadow-2xl lg:flex-row"
       >
         <!-- 左侧：图片 -->
         <div
-          class="bg-neutral-divider relative min-h-[350px] overflow-hidden lg:min-h-full lg:w-[45%]"
+          class="bg-neutral-divider relative min-h-87.5 overflow-hidden lg:min-h-full lg:w-[45%]"
         >
           <div
             v-for="(value, index) in CORE_VALUES"
@@ -147,7 +147,7 @@ const activeItem = computed(() => CORE_VALUES[activeIndex.value] as CoreValue)
             class="group relative flex flex-col overflow-hidden rounded-2xl p-6 text-left transition-all duration-500"
             :class="
               index === activeIndex
-                ? 'bg-primary-light shadow-sm'
+                ? 'bg-primary/20 shadow-sm'
                 : 'hover:bg-neutral-bg opacity-70 hover:opacity-100'
             "
             @click="activeIndex = index"
@@ -169,7 +169,7 @@ const activeItem = computed(() => CORE_VALUES[activeIndex.value] as CoreValue)
 
               <div
                 v-if="index === activeIndex"
-                class="bg-primary/20 animate-in slide-in-from-left ml-4 h-[3px] flex-1 duration-700"
+                class="bg-primary/20 animate-in slide-in-from-left ml-4 h-0.75 flex-1 duration-700"
               />
             </div>
 
@@ -179,7 +179,7 @@ const activeItem = computed(() => CORE_VALUES[activeIndex.value] as CoreValue)
               :class="index === activeIndex ? 'mt-6 max-h-60 opacity-100' : 'max-h-0 opacity-0'"
             >
               <p
-                class="text-body text-neutral-text2 border-primary/20 ml-5 border-l-4 pl-[64px] leading-relaxed font-medium"
+                class="text-body text-neutral-text2 border-primary/20 ml-5 border-l-4 pl-16 leading-relaxed font-medium"
               >
                 {{ value.description }}
               </p>

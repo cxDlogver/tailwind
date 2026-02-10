@@ -8,23 +8,23 @@ type Job = Pick<JobsCollectionItem, 'slug' | 'title' | 'base'>
 const { data } = useAllJobsWithFields(['slug', 'title', 'base'] as const)
 const RECENT_JOBS = computed<Job[]>(() => (data.value ?? []) as Job[])
 
-const SKETCH_IMAGES = [
-  'https://illustrations.popsy.co/gray/musician.svg',
-  'https://illustrations.popsy.co/gray/graphic-design.svg',
-  'https://illustrations.popsy.co/gray/web-design.svg',
-  'https://illustrations.popsy.co/gray/creative-work.svg',
-  'https://illustrations.popsy.co/gray/work-from-home.svg',
-  'https://illustrations.popsy.co/gray/developer.svg',
-  'https://illustrations.popsy.co/gray/data-analysis.svg',
-] as const
-
+const svgJobs = import.meta.glob('~/assets/icons/jobs/*.svg', { eager: true })
+const svgNames = Object.keys(svgJobs).map((fullPath) => {
+  const file = fullPath.split('/').pop()! // xxx.svg
+  return file.replace(/\.svg$/i, '') // xxx
+})
 const searchQuery = ref('')
 
 const jobList = computed(() => {
-  const list = [...RECENT_JOBS.value, ...RECENT_JOBS.value]
+  const list = [
+    ...RECENT_JOBS.value,
+    ...RECENT_JOBS.value,
+    ...RECENT_JOBS.value,
+    ...RECENT_JOBS.value,
+  ]
   return list.map((job, i) => ({
     job,
-    image: SKETCH_IMAGES[i % SKETCH_IMAGES.length] as string,
+    image: `my-job:${svgNames[i % svgNames.length]}` as string,
     index: i,
   }))
 })
@@ -90,13 +90,13 @@ function handleSearchClick() {
               v-model="searchQuery"
               type="text"
               placeholder="你想扮演什么角色? (如: 前端开发)"
-              class="text-h3 text-neutral-text1 placeholder-neutral-text3 w-full bg-transparent py-5 font-bold focus:outline-none"
+              class="text-h4 text-neutral-text1 placeholder-neutral-text3 w-full bg-transparent py-5 font-bold focus:outline-none"
               @keydown="onKeydown"
             />
           </div>
           <button
             type="button"
-            class="bg-primary text-h2 hover:bg-primary-dark cursor-pointer rounded-2xl px-12 py-5 font-black tracking-wider text-white uppercase shadow-xl transition-all hover:-translate-y-1 active:scale-95 md:rounded-full"
+            class="bg-primary text-h3 hover:bg-primary-dark cursor-pointer rounded-2xl px-12 py-5 font-black tracking-wider text-white uppercase shadow-xl transition-all hover:-translate-y-1 active:scale-95 md:rounded-full"
             @click="handleSearchClick"
           >
             开始探索

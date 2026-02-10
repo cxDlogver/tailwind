@@ -25,15 +25,10 @@ const HUBS: Hub[] = [
     en: 'SHANGHAI',
     image: '/images/global-presence/shanghai.jpg',
   },
-  {
-    name: '咸宁',
-    en: 'XIANNING',
-    image: '/images/global-presence/xianning.jpg',
-  },
 ]
 
 // 重复数据以确保滚动无缝
-const row1 = computed(() => [...HUBS, ...HUBS, ...HUBS, ...HUBS])
+const row1 = computed(() => [...HUBS, ...HUBS])
 const row2 = computed(() => [...row1.value].reverse())
 </script>
 
@@ -61,8 +56,9 @@ const row2 = computed(() => [...row1.value].reverse())
 
     <!-- 滚动区 -->
     <div class="marquee-container relative space-y-6 md:space-y-8">
-      <!-- 第一行：向左 -->
-      <div class="animate-marquee-fast flex">
+      <!-- 第一行：向左. 改成 grid  -->
+      <div class="animate-marquee-medium grid grid-flow-col gap-0" :class="'w-' + row1.length * 36">
+        >
         <JoinHubBrick
           v-for="(hub, idx) in row1"
           :key="`row1-${idx}`"
@@ -73,7 +69,7 @@ const row2 = computed(() => [...row1.value].reverse())
       </div>
 
       <!-- 第二行：向右 -->
-      <div class="animate-marquee-fast-reverse flex">
+      <div class="animate-marquee-medium-reverse flex">
         <JoinHubBrick
           v-for="(hub, idx) in row2"
           :key="`row2-${idx}`"

@@ -26,17 +26,15 @@ const visions: VisionItem[] = [
 </script>
 
 <template>
-  <section class="main-card relative overflow-hidden">
+  <section class="relative overflow-hidden">
     <!-- 使命板块 -->
     <div class="bg-primary relative py-20 md:py-28">
       <div
         class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden opacity-10 select-none"
       >
-        <span
-          class="border-t border-b border-white text-[15vw] leading-none font-black whitespace-nowrap text-transparent italic"
-        >
-          MISSION ANTHEM
-        </span>
+        <div
+          class="h-[15vw] w-full border-t border-b border-white leading-none font-black whitespace-nowrap text-transparent italic"
+        ></div>
       </div>
 
       <div class="relative z-10 container mx-auto px-6">
@@ -66,8 +64,8 @@ const visions: VisionItem[] = [
     </div>
 
     <!-- 愿景板块 -->
-    <div class="bg-neutral-bg relative py-20 md:py-28">
-      <div class="container">
+    <div class="bg-neutral-bg main-card relative py-20 md:py-28">
+      <div class="container mx-auto px-6">
         <!-- 头部 -->
         <div
           class="border-primary/20 mb-16 flex flex-col items-end gap-8 border-b pb-10 lg:flex-row"
@@ -84,7 +82,7 @@ const visions: VisionItem[] = [
               </span>
             </div>
             <h3
-              class="text-h4 text-neutral-text1 md:text-h1 leading-none font-black tracking-tighter uppercase italic"
+              class="text-h4 text-neutral-text1 md:text-h1 leading-none font-black tracking-tighter uppercase"
             >
               企业愿景
             </h3>
@@ -100,9 +98,9 @@ const visions: VisionItem[] = [
         </div>
 
         <!-- 内容：左图右列表 -->
-        <div class="flex flex-col items-center gap-16 lg:flex-row">
+        <div class="flex flex-col items-start gap-16 lg:flex-row">
           <!-- 左侧图 -->
-          <div class="top-32 w-full lg:w-[35%]">
+          <div class="sticky top-32 w-full lg:w-[35%]">
             <div class="group relative">
               <div
                 class="bg-primary/5 absolute -inset-4 -rotate-2 rounded-4xl transition-transform duration-500 group-hover:rotate-0"
@@ -219,7 +217,7 @@ const visions: VisionItem[] = [
 
                 <div class="flex flex-col pt-4">
                   <span class="text-primary-hover text-[32px] leading-none font-black">%</span>
-                  <span class="text-primary-hover -mt-1 text-[32px] leading-none font-black"
+                  <span class="text-primary-hover mt-[-4px] text-[32px] leading-none font-black"
                     >+</span
                   >
                 </div>

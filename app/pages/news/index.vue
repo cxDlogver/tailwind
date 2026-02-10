@@ -336,7 +336,7 @@
       </div>
 
       <!-- 分页栏 -->
-      <div v-if="totalPages > 1" class="mt-40 flex items-center justify-center">
+      <div v-if="totalPages > 1" class="p-bottom mt-20 flex items-center justify-center">
         <div
           class="flex items-center gap-2 rounded-4xl border border-[#EEEEEE] bg-white p-3 shadow-xl shadow-black/2"
         >
@@ -356,7 +356,7 @@
 
           <div class="flex items-center px-4">
             <button
-              v-for="p in visiblePages"
+              v-for="p in visibleItems"
               :key="p"
               type="button"
               class="group relative flex h-12 w-12 items-center justify-center"
@@ -372,7 +372,7 @@
                   currentPage === p ? 'text-white' : 'text-[#BBBBBB] group-hover:text-[#3B7073]'
                 "
               >
-                {{ String(p).padStart(2, '0') }}
+                {{ typeof p === 'number' ? String(p).padStart(2, '0') : '···' }}
               </span>
             </button>
           </div>
@@ -591,25 +591,44 @@ const displayNews = computed(() => {
 // 分页过渡关键字 - 用于 Transition 组件的 key，触发过渡动画 - 当前页数 - 年份 - 类型
 const pageKey = computed(() => `${currentPage.value}-${activeTab.value}-${activeYear.value}`)
 // 处理页码变化
-function handlePageChange(page: number): void {
+function handlePageChange(page: number | 'ellipsis1' | 'ellipsis2'): void {
   if (page === currentPage.value) return
-  currentPage.value = page
+  if (page === 'ellipsis1')
+    currentPage.value =
+      (visibleItems.value[visibleItems.value.indexOf('ellipsis1') - 1] as number) + 1
+  else if (page === 'ellipsis2')
+    currentPage.value =
+      (visibleItems.value[visibleItems.value.indexOf('ellipsis2') - 1] as number) + 1
+  else currentPage.value = page
 }
-// 计算可见页码（最多5个）
-const visiblePages = computed(() => {
-  const pages: number[] = []
-  const maxVisible = 5
+
+// 7个按钮（含省略号）
+type PageItem = number | 'ellipsis1' | 'ellipsis2'
+
+const visibleItems = computed<PageItem[]>(() => {
   const total = totalPages.value
+  const cur = Math.min(Math.max(1, currentPage.value), total)
 
-  let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2))
-  const end = Math.min(total, start + maxVisible - 1)
+  if (total <= 0) return []
 
-  if (end === total) start = Math.max(1, end - maxVisible + 1)
+  // 不需要省略号的情况：直接显示所有页码
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
 
-  for (let i = start; i <= end; i += 1) pages.push(i)
-  return pages
+  // 靠近开头：不显示左省略号
+  if (cur <= 4) {
+    return [1, 2, 3, 4, 5, 'ellipsis2', total]
+  }
+
+  // 靠近结尾：不显示右省略号
+  if (cur >= total - 3) {
+    return [1, 'ellipsis1', total - 4, total - 3, total - 2, total - 1, total]
+  }
+
+  // 中间：左右都有省略号
+  return [1, 'ellipsis1', cur - 1, cur, cur + 1, 'ellipsis2', total]
 })
-
 /** 生命周期钩子 */
 onMounted(() => {
   if (featuredItems.value.length > 0 && !isHoveringHero.value) startHeroAutoPlay()
@@ -621,140 +640,142 @@ onBeforeUnmount(() => {
 </script>
 
 <style>
-/* ===== Hero 方向滑动 ===== */
-.hero-slide-left-enter-active,
-.hero-slide-left-leave-active,
-.hero-slide-right-enter-active,
-.hero-slide-right-leave-active {
-  transition:
-    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 420ms ease;
-}
+@layer utilities {
+  /* ===== Hero 方向滑动 ===== */
+  .hero-slide-left-enter-active,
+  .hero-slide-left-leave-active,
+  .hero-slide-right-enter-active,
+  .hero-slide-right-leave-active {
+    transition:
+      transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 420ms ease;
+  }
 
-.hero-slide-left-enter-from {
-  transform: translateX(100%);
-  opacity: 0;
-}
-.hero-slide-left-leave-to {
-  transform: translateX(-100%);
-  opacity: 0;
-}
+  .hero-slide-left-enter-from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  .hero-slide-left-leave-to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
 
-.hero-slide-right-enter-from {
-  transform: translateX(-100%);
-  opacity: 0;
-}
-.hero-slide-right-leave-to {
-  transform: translateX(100%);
-  opacity: 0;
-}
+  .hero-slide-right-enter-from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  .hero-slide-right-leave-to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 
-/* ===== Hero 元素弹出动画 ===== */
-.hero-pop-enter-active {
-  transition:
-    transform 840ms cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 840ms ease;
-  transition-delay: var(--d, 0ms);
-}
-
-.hero-pop-enter-from {
-  transform: translateY(18px);
-  opacity: 0;
-}
-
-/* 可选：减少动态效果偏好 */
-@media (prefers-reduced-motion: reduce) {
+  /* ===== Hero 元素弹出动画 ===== */
   .hero-pop-enter-active {
-    transition-duration: 1ms;
-    transition-delay: 0ms;
+    transition:
+      transform 840ms cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 840ms ease;
+    transition-delay: var(--d, 0ms);
   }
-}
 
-/* Hero 指示器进度条 */
-.hero-progress {
-  animation-name: heroProgress;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
-}
-@keyframes heroProgress {
-  from {
-    width: 0%;
+  .hero-pop-enter-from {
+    transform: translateY(18px);
+    opacity: 0;
   }
-  to {
-    width: 100%;
-  }
-}
 
-/* =========================
+  /* 可选：减少动态效果偏好 */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-pop-enter-active {
+      transition-duration: 1ms;
+      transition-delay: 0ms;
+    }
+  }
+
+  /* Hero 指示器进度条 */
+  .hero-progress {
+    animation-name: heroProgress;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+  @keyframes heroProgress {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  /* =========================
    Grid 叠加切页动画（无空白）
    - 离场：左移 + 快速淡出
    - 进场：左移 + 上移 + 渐显
    ========================= */
 
-/* 两个状态都做硬件加速 & 避免闪烁 */
-/* 叠加：离场页 absolute，避免空白 */
-.grid-page-enter-active,
-.grid-page-leave-active {
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-}
+  /* 两个状态都做硬件加速 & 避免闪烁 */
+  /* 叠加：离场页 absolute，避免空白 */
+  .grid-page-enter-active,
+  .grid-page-leave-active {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
 
-.grid-page-leave-active {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-}
+  .grid-page-leave-active {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+  }
 
-/* 外层：只管 X */
-.grid-page-enter-from,
-.grid-page-leave-to {
-  transform: translate3d(22px, 0, 0);
-}
-.grid-page-enter-to,
-.grid-page-leave-from {
-  transform: translate3d(0, 0, 0);
-}
+  /* 外层：只管 X */
+  .grid-page-enter-from,
+  .grid-page-leave-to {
+    transform: translate3d(22px, 0, 0);
+  }
+  .grid-page-enter-to,
+  .grid-page-leave-from {
+    transform: translate3d(0, 0, 0);
+  }
 
-/* 内层：只管 Y + opacity（Y 迟一点开始） */
-.grid-page-wrap > .grid {
-  will-change: transform, opacity, filter;
-}
+  /* 内层：只管 Y + opacity（Y 迟一点开始） */
+  .grid-page-wrap > .grid {
+    will-change: transform, opacity, filter;
+  }
 
-.grid-page-enter-from .grid {
-  opacity: 0;
-  transform: translate3d(0, 50px, 0);
-  filter: blur(1px);
-}
+  .grid-page-enter-from .grid {
+    opacity: 0;
+    transform: translate3d(0, 50px, 0);
+    filter: blur(1px);
+  }
 
-.grid-page-enter-to .grid {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-  filter: blur(0);
-}
+  .grid-page-enter-to .grid {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    filter: blur(0);
+  }
 
-/* 时序：X 先开始（无 delay），Y+opacity 后开始（delay） */
-.grid-page-enter-active {
-  transition: transform 2000ms cubic-bezier(0.16, 1, 0.3, 1) 320ms;
-}
-.grid-page-enter-active .grid {
-  transition:
-    transform 2000ms cubic-bezier(0.16, 1, 0.3, 1) 420ms,
-    opacity 1000ms ease 320ms,
-    filter 500ms ease 320ms;
-}
+  /* 时序：X 先开始（无 delay），Y+opacity 后开始（delay） */
+  .grid-page-enter-active {
+    transition: transform 2000ms cubic-bezier(0.16, 1, 0.3, 1) 320ms;
+  }
+  .grid-page-enter-active .grid {
+    transition:
+      transform 2000ms cubic-bezier(0.16, 1, 0.3, 1) 420ms,
+      opacity 1000ms ease 320ms,
+      filter 500ms ease 320ms;
+  }
 
-/* 离场：快速左移淡出（也可以同样拆分，通常不必） */
-.grid-page-leave-active {
-  transition:
-    transform 500ms ease,
-    opacity 180ms ease;
-}
-.grid-page-leave-from {
-  opacity: 1;
-}
-.grid-page-leave-to {
-  opacity: 0;
-  transform: translate3d(-22px, 0, 0);
+  /* 离场：快速左移淡出（也可以同样拆分，通常不必） */
+  .grid-page-leave-active {
+    transition:
+      transform 500ms ease,
+      opacity 180ms ease;
+  }
+  .grid-page-leave-from {
+    opacity: 1;
+  }
+  .grid-page-leave-to {
+    opacity: 0;
+    transform: translate3d(-22px, 0, 0);
+  }
 }
 </style>

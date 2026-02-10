@@ -16,20 +16,20 @@ const productItems = [
          订阅我们的动态
          ========================= -->
   <footer>
-    <section class="section-card p-bottom">
+    <section class="section-card pb-24">
       <div class="mb-16 text-center">
         <h2 class="text-4xl font-bold tracking-tight text-[#333333]">订阅我们的动态</h2>
         <p class="mx-auto mt-4 max-w-md leading-relaxed text-[#666666]">
           第一时间获取最新的行业深度报告与前沿技术简报，掌握数字变革的最新情报。
         </p>
       </div>
-      <IndexNewsletterSubscription hydrate-on-visible />
+      <LayoutNewsletterSubscription />
     </section>
 
     <!-- =========================
          页脚
          ========================= -->
-    <div class="bg-suface border-border relative z-10 border-t px-6 pt-12 pb-10 md:px-12">
+    <div class="bg-surface border-border relative z-10 border-t px-6 pt-12 pb-5 md:px-12">
       <div class="mx-auto max-w-360">
         <div class="flex flex-col items-start justify-between gap-12 lg:flex-row lg:gap-4">
           <!-- 左侧导航矩阵 -->
@@ -164,7 +164,7 @@ const productItems = [
 
         <!-- 底部版权与备案 -->
         <div
-          class="mt-10 flex flex-col items-center justify-between gap-4 border-t border-[#EEEEEE] pt-6 md:flex-row"
+          class="mt-5 flex flex-col items-center justify-between gap-4 border-t border-[#EEEEEE] pt-6 md:flex-row"
         >
           <p class="font-mono text-[11px] tracking-widest text-[#BBBBBB]">
             © 2024-{{ currentYear }} 缔零科技

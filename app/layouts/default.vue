@@ -2,8 +2,8 @@
 
 <template>
   <div class="bg-surface-muted min-h-screen">
-    <Navbar />
+    <LayoutNavbar />
     <slot />
-    <Footer />
+    <LayoutFooter />
   </div>
 </template>

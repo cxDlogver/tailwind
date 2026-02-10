@@ -9,7 +9,7 @@ defineProps<{
 
 <template>
   <div
-    class="bg-neutral-bg border-primary relative mx-3 flex h-45 w-[320px] shrink-0 items-center overflow-hidden rounded-4xl border-2 shadow-sm md:h-57.5 md:w-105"
+    class="bg-neutral-bg border-primary relative flex h-45 w-[320px] shrink-0 items-center overflow-hidden rounded-4xl border-2 shadow-sm md:h-57.5 md:w-105"
   >
     <!-- 图片 -->
     <div class="border-primary h-full w-[42%] overflow-hidden border-r-2">

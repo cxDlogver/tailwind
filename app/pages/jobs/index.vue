@@ -77,7 +77,7 @@ function clearFilters() {
           <template v-else> 探索所有 <span class="text-primary">开放职位</span> </template>
         </h1>
 
-        <p class="text-h2 text-neutral-text2 max-w-2xl font-normal">
+        <p class="text-h3 text-neutral-text2 max-w-2xl font-normal">
           在这里找到属于你的节奏。我们正在寻找能够挑战现状、重构规则的先行者。
         </p>
       </div>
@@ -160,7 +160,7 @@ function clearFilters() {
                 <div>
                   <div class="mb-3 flex items-center gap-2">
                     <span
-                      class="bg-brand-4 text-primary inline-block rounded-full px-3 py-1 text-[12px] font-bold tracking-wider uppercase"
+                      class="bg-primary-light text-primary inline-block rounded-full px-3 py-1 text-[12px] font-bold tracking-wider uppercase"
                     >
                       {{ job.category }}
                     </span>
@@ -174,7 +174,7 @@ function clearFilters() {
                   </div>
 
                   <h3
-                    class="text-h2 text-neutral-text1 group-hover:text-primary font-bold transition-colors"
+                    class="text-h3 text-neutral-text1 group-hover:text-primary font-bold transition-colors"
                   >
                     {{ job.title }}
                   </h3>

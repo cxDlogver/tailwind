@@ -189,7 +189,7 @@ function back() {
       <!-- 底部投递区 -->
       <div class="relative mt-16">
         <div
-          class="bg-primary border-primary-dark relative overflow-hidden rounded-[3rem] border p-12 text-center shadow-2xl md:p-16"
+          class="bg-primary border-primary-dark relative overflow-hidden rounded-[3rem] border p-12 text-center shadow-2xl md:p-8"
         >
           <div
             class="absolute inset-0 opacity-5"
@@ -200,21 +200,21 @@ function back() {
             }"
           />
 
-          <div class="relative z-10 mx-auto max-w-4xl">
+          <div class="relative z-10 mx-auto max-w-3xl">
             <Icon name="lucide:zap" class="text-primary-hover mx-auto mb-8 h-12 w-12 opacity-80" />
             <h2
-              class="text-h1 mb-6 leading-none font-black tracking-tighter text-white uppercase italic md:text-6xl"
+              class="text-h3 md:text-h1 mb-6 leading-none font-black tracking-tighter text-white uppercase italic"
             >
               Ready to Join <span class="text-primary-hover">Diling?</span>
             </h2>
-            <p class="text-h3 mb-12 leading-tight font-bold text-white/90">
+            <p class="text-h4 mb-12 leading-tight font-bold text-white/90">
               如果你认为自己具备那种能看透代码迷雾、植入确信力量的能力，我们随时待命。直接发起连接，让我们聊聊关于未来的无限可能。
             </p>
 
-            <div class="flex flex-col items-center gap-6">
+            <div class="flex flex-col items-center gap-3">
               <a
                 href="mailto:xushuangshuang@yjsafe.cn"
-                class="group text-primary text-h3 flex items-center gap-4 rounded-3xl bg-white px-14 py-7 font-black shadow-2xl transition-all hover:scale-105 active:scale-95"
+                class="group text-primary text-h4 flex items-center gap-4 rounded-3xl bg-white px-14 py-5 font-black shadow-2xl transition-all hover:scale-105 active:scale-95"
               >
                 xushuangshuang@yjsafe.cn
                 <Icon

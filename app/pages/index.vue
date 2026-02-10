@@ -2,8 +2,8 @@
 
 <template>
   <div>
-    <section class="p-top pb-6">
-      <IndexCelestialAuditCard />
+    <section class="pb-6">
+      <IndexHero />
     </section>
     <div class="main-card">
       <section class="section-card">
@@ -14,18 +14,18 @@
             <span class="mr-3 h-2 w-2 animate-ping rounded-full bg-[#3B7073]" />
             System Active • Release v8.2
           </div>
-          <h1 class="text-7xl leading-[0.9] font-bold tracking-tighter text-[#333333] md:text-9xl">
-            探索
-            <span
-              class="mt-2 block bg-linear-to-r from-[#3B7073] to-[#6E989B] bg-clip-text text-transparent"
-            >
-              数字边界
-            </span>
+          <h1 class="text-5xl leading-[0.9] font-bold tracking-tighter text-[#333333] md:text-8xl">
+            缔零科技
+            <div class="bg-primary mt-2 block bg-clip-text text-transparent">智能内容安全</div>
           </h1>
-          <p class="max-w-2xl text-xl leading-relaxed font-light text-[#666666]">
-            超越代码，重塑交互。Lawgenesis 以极简主义重构未来生产力内核，
-            将法律与科技的深度感知转化为原生动力。
-          </p>
+          <div>
+            <p class="text-neutral-text2 max-w-2xl text-xl leading-relaxed font-medium">
+              一站式多模态全风险域内容审查平台
+            </p>
+            <p class="text-primary/50 text-10 max-w-2xl font-mono leading-relaxed font-bold">
+              One-stop Multi-modal Full-risk Domain Content Audit Platform
+            </p>
+          </div>
         </div>
       </section>
     </div>
@@ -54,7 +54,7 @@
          产品矩阵
          ========================= -->
       <section class="section-card">
-        <LazyIndexProductMatrixSection hydrate-on-visible />
+        <IndexProductMatrixSection />
       </section>
     </div>
 
@@ -62,7 +62,7 @@
          合作伙伴
          ========================= -->
     <section class="section-card">
-      <LazyIndexPartnersSection hydrate-on-visible />
+      <IndexPartnersSection />
     </section>
   </div>
 </template>
