@@ -81,7 +81,7 @@ const option = computed(() => {
 
 <template>
   <section id="data" class="bg-[#F9F9F9] py-32">
-    <div class="mx-auto max-w-[1440px] px-8 md:px-16">
+    <div class="mx-auto max-w-360 px-8 md:px-16">
       <div class="grid grid-cols-1 gap-16 md:grid-cols-12">
         <!-- Text Info -->
         <div class="md:col-span-5">
@@ -123,7 +123,7 @@ const option = computed(() => {
         <div
           class="flex flex-col justify-center rounded-[4rem] border border-gray-100 bg-gray-50/50 p-8 md:col-span-7 md:p-12"
         >
-          <div class="h-[400px] w-full">
+          <div class="h-100 w-full">
             <ClientOnly>
               <VChart :option="option" autoresize class="h-full w-full" />
             </ClientOnly>

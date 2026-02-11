@@ -2,28 +2,31 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-type Hub = { name: string; en: string; image: string }
-
+type Hub = { name: string; en: string; image1: string; image2: string }
 const HUBS: Hub[] = [
   {
     name: '武汉',
     en: 'WUHAN',
-    image: '/images/global-presence/wuhan.jpg',
+    image1: '/images/global-presence/wuhan.jpg',
+    image2: '/images/global-presence/wuhan2.jpg',
   },
   {
     name: '北京',
     en: 'BEIJING',
-    image: '/images/global-presence/beijing.jpg',
+    image1: '/images/global-presence/beijing.jpg',
+    image2: '/images/global-presence/beijing2.jpg',
   },
   {
     name: '深圳',
     en: 'SHENZHEN',
-    image: '/images/global-presence/shenzhen.jpg',
+    image1: '/images/global-presence/shenzhen.jpg',
+    image2: '/images/global-presence/shenzhen2.jpg',
   },
   {
     name: '上海',
     en: 'SHANGHAI',
-    image: '/images/global-presence/shanghai.jpg',
+    image1: '/images/global-presence/shanghai.jpg',
+    image2: '/images/global-presence/shanghai2.jpg',
   },
 ]
 
@@ -64,7 +67,7 @@ const row2 = computed(() => [...row1.value].reverse())
           :key="`row1-${idx}`"
           :name="hub.name"
           :en="hub.en"
-          :image="hub.image"
+          :image="hub.image1"
         />
       </div>
 
@@ -75,7 +78,7 @@ const row2 = computed(() => [...row1.value].reverse())
           :key="`row2-${idx}`"
           :name="hub.name"
           :en="hub.en"
-          :image="hub.image"
+          :image="hub.image2"
         />
       </div>
     </div>
