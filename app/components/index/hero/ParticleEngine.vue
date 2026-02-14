@@ -14,6 +14,7 @@ type Particle = {
 
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 const particles = ref<Particle[]>([])
+const numParticles = computed(() => (window.innerWidth > 768 ? 300 : 100)) // 大屏 300 粒，小屏 150 粒
 
 let rafId: number | null = null
 
@@ -53,7 +54,7 @@ onMounted(() => {
 
   // 初始化 300 粒子
   particles.value = []
-  for (let i = 0; i < 300; i++) {
+  for (let i = 0; i < numParticles.value; i++) {
     particles.value.push(createParticle())
   }
 

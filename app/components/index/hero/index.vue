@@ -7,9 +7,16 @@ import type { AuditStage } from '~/types/indexHeroType'
 
 const scrollX = ref(0)
 const rafId = ref<number | null>(null)
+const screenWidth = ref(window.innerWidth)
 
-const PORTAL_INPUT_X = -280
-const PORTAL_OUTPUT_X = 280
+const portalIntputX = computed(() => {
+  if (screenWidth.value <= 768) return 0
+  return -screenWidth.value * 0.2
+})
+const portalOutputX = computed(() => {
+  if (screenWidth.value <= 768) return 0
+  return screenWidth.value * 0.2
+})
 const cardWidth = 550
 const totalWidth = computed(() => AUDIT_DATA.length * cardWidth)
 
@@ -42,8 +49,8 @@ function normalizeOffset(index: number) {
 // 三个阶段：输入 -> 审核中 -> 输出
 function getStage(offset: number): AuditStage {
   let stage: AuditStage = 'AUDITING'
-  if (offset < PORTAL_INPUT_X) stage = 'INPUT'
-  else if (offset > PORTAL_OUTPUT_X) stage = 'OUTPUT'
+  if (offset < portalIntputX.value) stage = 'INPUT'
+  else if (offset > portalOutputX.value) stage = 'OUTPUT'
   return stage
 }
 </script>
@@ -51,20 +58,21 @@ function getStage(offset: number): AuditStage {
 <template>
   <div class="relative w-full overflow-hidden">
     <IndexHeroParticleEngine />
-    <div class="relative mt-40 h-120 w-full">
+    <div class="relative mt-40 h-75 w-full md:h-105">
       <!-- 左 portal 光晕 -->
       <div
-        class="pointer-events-none absolute top-1/2 z-10 h-125 w-40 -translate-y-1/2 bg-[radial-gradient(ellipse,#3B7073,transparent_70%)] opacity-40 blur-2xl"
+        class="pointer-events-none absolute top-1/2 z-10 h-100 w-40 -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,#3B7073,transparent_70%)] opacity-40 blur-2xl"
         :style="{
-          left: `calc(50% + ${PORTAL_INPUT_X}px)`,
+          left: `calc(50% + ${portalIntputX}px)`,
         }"
       />
 
       <!-- 右 portal 光晕 -->
       <div
-        class="pointer-events-none absolute top-1/2 z-10 h-125 w-40 -translate-y-1/2 bg-[radial-gradient(ellipse,#3B7073,transparent_70%)] opacity-40 blur-2xl"
+        v-if="screenWidth > 768"
+        class="pointer-events-none absolute top-1/2 z-10 h-100 w-40 -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(ellipse,#3B7073,transparent_70%)] opacity-40 blur-2xl"
         :style="{
-          left: `calc(50% + ${PORTAL_OUTPUT_X}px)`,
+          left: `calc(50% + ${portalOutputX}px)`,
         }"
       />
 
@@ -75,7 +83,7 @@ function getStage(offset: number): AuditStage {
           :item="item"
           :stage="getStage(normalizeOffset(index))"
           :offset="normalizeOffset(index)"
-          :portals="{ input: PORTAL_INPUT_X, output: PORTAL_OUTPUT_X }"
+          :portals="{ input: portalIntputX, output: portalOutputX }"
         />
       </div>
     </div>

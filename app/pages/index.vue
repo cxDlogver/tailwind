@@ -2,7 +2,7 @@
 const { siteUrl } = useSiteSeo()
 
 useSeoMeta({
-  title: '缔零科技 - 智能内容安全解决方案',
+  title: '智能内容安全解决方案',
   description:
     '缔零科技提供一站式多模态全风险域内容审查平台，助力企业构建安全、合规的数字环境。了解我们的产品矩阵和合作伙伴，加入我们，共创安全未来。',
   ogTitle: '缔零科技 - 智能内容安全解决方案',
@@ -15,16 +15,16 @@ useSeoMeta({
 
 <template>
   <div>
-    <section class="pb-6">
+    <section>
       <IndexHero />
     </section>
     <div class="main-card">
       <section class="section-card">
         <div class="flex flex-col items-center space-y-10 text-center">
           <div
-            class="inline-flex items-center rounded-full border border-[#DDDDDD] bg-white px-6 py-2 font-mono text-[10px] tracking-[0.3em] text-[#3B7073] uppercase shadow-sm transition-all hover:border-[#3B7073]/40"
+            class="text-primary hover:border-primary/40 inline-flex items-center rounded-full border border-[#DDDDDD] bg-white px-6 py-2 font-mono text-[8px] tracking-[0.3em] uppercase shadow-sm transition-all md:text-[10px]"
           >
-            <span class="mr-3 h-2 w-2 animate-ping rounded-full bg-[#3B7073]" />
+            <span class="bg-primary mr-3 h-2 w-2 animate-ping rounded-full" />
             System Active • Release v8.2
           </div>
           <h1 class="text-5xl leading-[0.9] font-bold tracking-tighter text-[#333333] md:text-8xl">
@@ -43,10 +43,10 @@ useSeoMeta({
       </section>
     </div>
     <div class="main-card">
-      <div class="flex flex-wrap justify-center gap-6 pt-10">
+      <div class="flex flex-wrap justify-center gap-6">
         <button
           type="button"
-          class="group relative overflow-hidden rounded-full bg-[#3B7073] px-14 py-5 font-bold text-white transition-all duration-500 hover:scale-105 hover:shadow-[0_20px_40px_-10px_rgba(59,112,115,0.3)] active:scale-95"
+          class="group bg-primary relative overflow-hidden rounded-full px-14 py-5 font-bold text-white transition-all duration-500 hover:scale-105 hover:shadow-[0_20px_40px_-10px_rgba(59,112,115,0.3)] active:scale-95"
           @click="console.log('Get Started Clicked')"
         >
           <span class="relative z-10">立即开启</span>
@@ -57,12 +57,13 @@ useSeoMeta({
 
         <button
           type="button"
-          class="rounded-full border border-[#DDDDDD] bg-white px-14 py-5 font-bold text-[#666666] transition-all duration-500 hover:border-[#3B7073] hover:text-[#3B7073]"
+          class="hover:border-primary hover:text-primary rounded-full border border-[#DDDDDD] bg-white px-14 py-5 font-bold text-[#666666] transition-all duration-500"
           @click="console.log('Learn More Clicked')"
         >
           技术文档
         </button>
       </div>
+
       <!-- =========================
          产品矩阵
          ========================= -->

@@ -183,9 +183,7 @@ function coverStyle(item: BusinessItem) {
     </div>
 
     <!-- 右侧产品矩阵 -->
-    <div
-      class="relative flex h-180 w-full shrink-0 items-center justify-center p-4 md:w-180 md:translate-x-24 md:transform"
-    >
+    <div class="relative flex h-180 w-full shrink-0 items-center justify-center p-4 md:w-180">
       <div
         class="pointer-events-none absolute inset-[-10%] rounded-full bg-[radial-gradient(circle_at_center,rgba(59,112,115,0.06)_0%,transparent_70%)]"
       />

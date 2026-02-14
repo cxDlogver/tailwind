@@ -9,13 +9,13 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css', '~/assets/css/animate.css'],
   site: {
-    title: '',
-    name: 'Nuxt3 Starter',
-    description: 'A Nuxt3 starter template with Tailwind CSS and Icon support.',
+    title: '缔零科技', // 网站标题
+    name: '缔零科技', // 网站名称
+    description:
+      '缔零科技提供一站式多模态全风险域内容审查平台，助力企业构建安全、合规的数字环境。了解我们的产品矩阵和合作伙伴，加入我们，共创安全未来。',
     url: 'https://nuxtseo.com/docs/nuxt-seo/getting-started/introduction',
-    image: '/og-image.png',
+    image: '/favicon.ico', // 网站预览图
   },
-
   devServer: {
     host: '0.0.0.0',
     port: 3000,
