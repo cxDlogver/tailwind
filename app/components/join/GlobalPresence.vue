@@ -8,25 +8,25 @@ const HUBS: Hub[] = [
     name: '武汉',
     en: 'WUHAN',
     image1: '/images/global-presence/wuhan.jpg',
-    image2: '/images/global-presence/wuhan2.jpg',
+    image2: '/images/global-presence/wuhan_2.jpg',
   },
   {
     name: '北京',
     en: 'BEIJING',
     image1: '/images/global-presence/beijing.jpg',
-    image2: '/images/global-presence/beijing2.jpg',
+    image2: '/images/global-presence/beijing_2.jpg',
   },
   {
     name: '深圳',
     en: 'SHENZHEN',
     image1: '/images/global-presence/shenzhen.jpg',
-    image2: '/images/global-presence/shenzhen2.jpg',
+    image2: '/images/global-presence/shenzhen_2.jpg',
   },
   {
     name: '上海',
     en: 'SHANGHAI',
     image1: '/images/global-presence/shanghai.jpg',
-    image2: '/images/global-presence/shanghai2.jpg',
+    image2: '/images/global-presence/shanghai_2.jpg',
   },
 ]
 
