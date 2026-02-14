@@ -34,7 +34,7 @@ async function handleApplyClick(e: MouseEvent) {
       :style="{ transform: cardTransform }"
     >
       <div
-        class="preserve-3d relative h-full w-full rounded-[3rem] shadow-2xl transition-transform duration-700 group-hover:transform-[rotateY(180deg)]"
+        class="preserve-3d relative h-full w-full rounded-[3rem] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.35)] transition-transform duration-700 group-hover:transform-[rotateY(180deg)]"
       >
         <!-- 正面 -->
         <div

@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 
 import type { AuditItem, AuditStage, AuditStatus, Modality } from '~/types/indexHeroType'
 
+const screenWidth = ref(window.innerWidth)
 const props = withDefaults(
   defineProps<{
     item: AuditItem
@@ -28,15 +29,17 @@ const smoothScale = computed(() => {
 })
 
 // 当卡片经过 portal 区域时，制造“被传送/被扫描”的高光、模糊、亮条效果
-const portalThreshold = 150
+const portalThreshold = computed(() => {
+  return screenWidth.value <= 768 ? 80 : 120
+})
 
 const currentPortal = computed<'input' | 'output' | null>(() => {
   if (!props.portals) return null
   const distIn = Math.abs(props.offset - props.portals.input)
   const distOut = Math.abs(props.offset - props.portals.output)
 
-  if (distIn < distOut && distIn < portalThreshold) return 'input'
-  if (distOut < distIn && distOut < portalThreshold) return 'output'
+  if (distIn < distOut && distIn < portalThreshold.value) return 'input'
+  if (distOut < distIn && distOut < portalThreshold.value) return 'output'
   return null
 })
 
@@ -45,7 +48,7 @@ const shimmerIntensity = computed(() => {
   const distIn = Math.abs(props.offset - props.portals.input)
   const distOut = Math.abs(props.offset - props.portals.output)
   const currentDist = Math.min(distIn, distOut) // 离最近的 portal 的距离, 距离越近，强度越大
-  return Math.max(0, 1 - currentDist / portalThreshold)
+  return Math.max(0, 1 - currentDist / portalThreshold.value)
 })
 
 function IsShimmerOverlay() {
@@ -56,12 +59,22 @@ function IsShimmerOverlay() {
 }
 
 /** 动态样式 */
+/** 动态样式：用缩放替代 width/height 变化 */
 const containerStyle = computed(() => {
-  // 这里用 px 最稳；你也可以把这些基准值按三种 stage 拆分
-  const baseW = 75
-  const baseH = 105
-  const maxW = 85
-  const maxH = 115
+  if (screenWidth.value <= 768) {
+    return {
+      width: '12rem',
+      height: '15rem',
+      opacity: opacity.value,
+      transform: `translate3d(calc(-50% + ${props.offset}px), 0, 0)`,
+    }
+  }
+  const baseW = 65
+  const baseH = 90
+  const maxW = 75
+  const maxH = 100
+
+  // 先算出“目标尺寸”（逻辑不变）
   let w = maxW
   let h = maxH
   if (props.stage === 'INPUT') {
@@ -75,14 +88,27 @@ const containerStyle = computed(() => {
     h = baseH
   }
 
-  return {
-    transform: `translate3d(calc(-50% + ${props.offset}px), 0, 0) scale(${smoothScale.value}) rotateY(${props.offset * 0.02}deg) rotateX(${Math.abs(props.offset) * 0.005}deg)`,
-    opacity: opacity.value,
-    width: `${w / 4}rem`,
-    height: `${h / 4}rem`,
+  // 把 w/h 映射成相对于 maxW/maxH 的缩放因子
+  const sx = w / maxW
+  const sy = h / maxH
 
-    // 关键：没有 transition 就不会“缓慢改变”
+  // 总缩放：全局 smoothScale * 局部尺寸缩放
+  const sX = smoothScale.value * sx
+  const sY = smoothScale.value * sy
+
+  return {
+    // 关键：width/height 固定，靠 scaleX/scaleY 做尺寸变化
+    width: `${maxW / 4}rem`,
+    height: `${maxH / 4}rem`,
+
+    opacity: opacity.value,
     transformStyle: 'preserve-3d',
+
+    // translate 仍用 offset，尺寸变化用 scale3d
+    transform: `translate3d(calc(-50% + ${props.offset}px), 0, 0)
+      scale3d(${sX}, ${sY}, 1)
+      rotateY(${props.offset * 0.02}deg)
+      rotateX(${Math.abs(props.offset) * 0.005}deg)`,
   } as const
 })
 
@@ -245,7 +271,7 @@ const depthClass =
           <Icon name="lucide:database" class="absolute h-8 w-8 text-slate-400" />
         </div>
 
-        <div class="space-y-4">
+        <div v-if="screenWidth >= 768" class="space-y-4">
           <div class="flex items-end justify-between border-b border-slate-200 pb-2">
             <span class="mono text-[10px] font-bold text-slate-400">METADATA EXTRACTED</span>
             <span class="mono text-primary text-[10px] font-bold">SUCCESS</span>
@@ -266,6 +292,7 @@ const depthClass =
           </div>
         </div>
         <div
+          v-if="screenWidth < 768"
           class="mono mt-auto flex items-center gap-2 text-[10px] font-bold tracking-widest text-slate-300 uppercase"
         >
           <Icon name="lucide:layers" class="h-3 w-3" />
@@ -276,7 +303,7 @@ const depthClass =
 
     <!-- ================= stage: AUDITING ================= -->
     <div
-      v-else-if="stage === 'AUDITING'"
+      v-else-if="stage === 'AUDITING' && screenWidth >= 768"
       :class="[
         'relative h-full w-full overflow-hidden rounded-[2.5rem] border border-white bg-white/60 p-8 text-left backdrop-blur-3xl',
         depthClass,
@@ -286,7 +313,7 @@ const depthClass =
         class="audit-scan-y via-primary pointer-events-none absolute right-0 left-0 z-10 h-px bg-linear-to-r from-transparent to-transparent"
       />
       <div :style="{ filter: `blur(${shimmerIntensity * 10}px)`, opacity: innerOpacity }">
-        <div class="mb-6 flex items-center gap-2">
+        <div class="mb-3 flex items-center gap-2">
           <div class="rounded-lg bg-slate-100 p-2">
             <Icon :name="modalityIconName(item.modality)" class="h-4 w-4 text-slate-500" />
           </div>
@@ -297,7 +324,7 @@ const depthClass =
             </p>
           </div>
         </div>
-        <div class="mb-8 flex items-start justify-between">
+        <div class="mb-4 flex items-start justify-between">
           <div>
             <h2 class="mb-1 text-3xl leading-none font-extrabold tracking-tighter text-slate-900">
               {{ item.title }}
@@ -407,12 +434,18 @@ const depthClass =
 
         <div class="my-4 h-px w-full bg-slate-100" />
 
-        <p class="mono text-[10px] leading-relaxed tracking-widest text-slate-400 uppercase">
+        <p
+          v-if="screenWidth >= 769"
+          class="mono text-[10px] leading-relaxed tracking-widest text-slate-400 uppercase"
+        >
           TRANSACTION HASH:<br />
           <span class="font-bold text-slate-600">{{ item.id.slice(0, 12) }}</span>
         </p>
 
-        <div class="mt-8 rounded-full border border-slate-100 bg-slate-50 px-4 py-2">
+        <div
+          v-if="screenWidth >= 769"
+          class="mt-8 rounded-full border border-slate-100 bg-slate-50 px-4 py-2"
+        >
           <span class="mono text-[10px] font-black text-slate-400">EXPORTED TO CLOUD</span>
         </div>
       </div>

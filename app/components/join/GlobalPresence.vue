@@ -58,10 +58,9 @@ const row2 = computed(() => [...row1.value].reverse())
     </div>
 
     <!-- 滚动区 -->
-    <div class="marquee-container relative space-y-6 md:space-y-8">
+    <div class="relative space-y-6 md:space-y-8">
       <!-- 第一行：向左. 改成 grid  -->
-      <div class="animate-marquee-medium grid grid-flow-col gap-0" :class="'w-' + row1.length * 36">
-        >
+      <div class="animate-marquee-medium grid w-max auto-cols-[30rem] grid-flow-col gap-0">
         <JoinHubBrick
           v-for="(hub, idx) in row1"
           :key="`row1-${idx}`"
@@ -72,7 +71,7 @@ const row2 = computed(() => [...row1.value].reverse())
       </div>
 
       <!-- 第二行：向右 -->
-      <div class="animate-marquee-medium-reverse flex">
+      <div class="animate-marquee-medium-reverse grid w-max auto-cols-[30rem] grid-flow-col gap-0">
         <JoinHubBrick
           v-for="(hub, idx) in row2"
           :key="`row2-${idx}`"

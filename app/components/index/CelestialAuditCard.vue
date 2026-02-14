@@ -1,3 +1,119 @@
+<script setup lang="ts">
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+
+const trackA = ref<HTMLElement | null>(null)
+const groupA = ref<HTMLElement | null>(null)
+const trackB = ref<HTMLElement | null>(null)
+const groupB = ref<HTMLElement | null>(null)
+const trackC = ref<HTMLElement | null>(null)
+const groupC = ref<HTMLElement | null>(null)
+
+// 新增：用于测量偏移量的“参考卡片”
+const cardA0 = ref<HTMLElement | null>(null) // w-60
+const cardB0 = ref<HTMLElement | null>(null) // w-60(在 md 及以上)
+const cardC0 = ref<HTMLElement | null>(null) // w-60
+
+const SPEED = 90
+let ro: ResizeObserver | null = null
+
+function apply(elTrack: HTMLElement, elGroup: HTMLElement, offsetPx: number) {
+  const shift = Math.round(elGroup.getBoundingClientRect().width)
+  const dur = Math.max(1, shift / SPEED)
+
+  elTrack.style.setProperty('--shift', `${shift}px`)
+  elTrack.style.setProperty('--dur', `${dur}s`)
+  elTrack.style.setProperty('--offset', `${Math.round(offsetPx)}px`)
+}
+
+async function sync() {
+  await nextTick()
+
+  // 计算偏移：B 相对 A 偏移一个 w-60；C 相对 B 再偏移一个 w-84
+  const wA = cardA0.value ? cardA0.value.getBoundingClientRect().width : 0
+  const wB = cardB0.value ? cardB0.value.getBoundingClientRect().width : 0
+  const wC = cardC0.value ? cardC0.value.getBoundingClientRect().width : 0
+
+  const offsetA = 0
+  const offsetB = wA - wB
+  const offsetC = wC - wB + offsetB
+  if (trackA.value && groupA.value) apply(trackA.value, groupA.value, offsetA)
+  if (trackB.value && groupB.value) apply(trackB.value, groupB.value, offsetB)
+  if (trackC.value && groupC.value) apply(trackC.value, groupC.value, offsetC)
+}
+
+/** 卡片经过过滤层 */
+
+let rafId = 0
+const filter1 = ref<HTMLElement | null>(null)
+const filter2 = ref<HTMLElement | null>(null)
+const startFile1 = ref(false)
+const startFile2 = ref(false)
+
+// 缓存卡片节点，避免每帧 query
+let cardsA: HTMLElement[] = []
+let cardsB: HTMLElement[] = []
+
+// 刷新卡片缓存
+function refreshCardsCache() {
+  cardsA = Array.from(document.querySelectorAll<HTMLElement>('.card-a'))
+  cardsB = Array.from(document.querySelectorAll<HTMLElement>('.card-b'))
+}
+
+// “经过”判定： 过滤层左边界在卡片矩形内，且右边界也在卡片矩形内
+function centerInRect(r: DOMRect, zone: DOMRect) {
+  return zone.left >= r.left && zone.left <= r.right
+}
+
+function anyCardPassing(cards: HTMLElement[], zone: DOMRect) {
+  for (const el of cards) {
+    const r = el.getBoundingClientRect()
+    if (centerInRect(r, zone)) return true
+  }
+  return false
+}
+
+function tick() {
+  const f1 = filter1.value?.getBoundingClientRect()
+  const f2 = filter2.value?.getBoundingClientRect()
+
+  // 实时态：有卡片经过就是 true；没有就是 false
+  if (f1) startFile1.value = anyCardPassing(cardsA, f1)
+  else startFile1.value = false
+
+  if (f2) startFile2.value = anyCardPassing(cardsB, f2)
+  else startFile2.value = false
+
+  rafId = requestAnimationFrame(tick)
+}
+
+onMounted(async () => {
+  sync()
+  ro = new ResizeObserver(sync)
+
+  if (trackA.value) ro.observe(trackA.value)
+  if (trackB.value) ro.observe(trackB.value)
+  if (trackC.value) ro.observe(trackC.value)
+
+  // 建议也观察“参考卡片”，断点变化时能立刻刷新 offset
+  if (cardA0.value) ro.observe(cardA0.value)
+  if (cardB0.value) ro.observe(cardB0.value)
+
+  window.addEventListener('resize', sync)
+
+  await nextTick()
+  refreshCardsCache()
+  rafId = requestAnimationFrame(tick)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', sync)
+  ro?.disconnect()
+  ro = null
+
+  cancelAnimationFrame(rafId)
+})
+</script>
+
 <template>
   <div class="relative w-full overflow-hidden">
     <div class="relative container mx-auto h-70 w-full overflow-hidden"></div>
@@ -117,122 +233,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
-
-const trackA = ref<HTMLElement | null>(null)
-const groupA = ref<HTMLElement | null>(null)
-const trackB = ref<HTMLElement | null>(null)
-const groupB = ref<HTMLElement | null>(null)
-const trackC = ref<HTMLElement | null>(null)
-const groupC = ref<HTMLElement | null>(null)
-
-// 新增：用于测量偏移量的“参考卡片”
-const cardA0 = ref<HTMLElement | null>(null) // w-60
-const cardB0 = ref<HTMLElement | null>(null) // w-60(在 md 及以上)
-const cardC0 = ref<HTMLElement | null>(null) // w-60
-
-const SPEED = 90
-let ro: ResizeObserver | null = null
-
-function apply(elTrack: HTMLElement, elGroup: HTMLElement, offsetPx: number) {
-  const shift = Math.round(elGroup.getBoundingClientRect().width)
-  const dur = Math.max(1, shift / SPEED)
-
-  elTrack.style.setProperty('--shift', `${shift}px`)
-  elTrack.style.setProperty('--dur', `${dur}s`)
-  elTrack.style.setProperty('--offset', `${Math.round(offsetPx)}px`)
-}
-
-async function sync() {
-  await nextTick()
-
-  // 计算偏移：B 相对 A 偏移一个 w-60；C 相对 B 再偏移一个 w-84
-  const wA = cardA0.value ? cardA0.value.getBoundingClientRect().width : 0
-  const wB = cardB0.value ? cardB0.value.getBoundingClientRect().width : 0
-  const wC = cardC0.value ? cardC0.value.getBoundingClientRect().width : 0
-
-  const offsetA = 0
-  const offsetB = wA - wB
-  const offsetC = wC - wB + offsetB
-  if (trackA.value && groupA.value) apply(trackA.value, groupA.value, offsetA)
-  if (trackB.value && groupB.value) apply(trackB.value, groupB.value, offsetB)
-  if (trackC.value && groupC.value) apply(trackC.value, groupC.value, offsetC)
-}
-
-/** 卡片经过过滤层 */
-
-let rafId = 0
-const filter1 = ref<HTMLElement | null>(null)
-const filter2 = ref<HTMLElement | null>(null)
-const startFile1 = ref(false)
-const startFile2 = ref(false)
-
-// 缓存卡片节点，避免每帧 query
-let cardsA: HTMLElement[] = []
-let cardsB: HTMLElement[] = []
-
-// 刷新卡片缓存
-function refreshCardsCache() {
-  cardsA = Array.from(document.querySelectorAll<HTMLElement>('.card-a'))
-  cardsB = Array.from(document.querySelectorAll<HTMLElement>('.card-b'))
-}
-
-// “经过”判定： 过滤层左边界在卡片矩形内，且右边界也在卡片矩形内
-function centerInRect(r: DOMRect, zone: DOMRect) {
-  return zone.left >= r.left && zone.left <= r.right
-}
-
-function anyCardPassing(cards: HTMLElement[], zone: DOMRect) {
-  for (const el of cards) {
-    const r = el.getBoundingClientRect()
-    if (centerInRect(r, zone)) return true
-  }
-  return false
-}
-
-function tick() {
-  const f1 = filter1.value?.getBoundingClientRect()
-  const f2 = filter2.value?.getBoundingClientRect()
-
-  // 实时态：有卡片经过就是 true；没有就是 false
-  if (f1) startFile1.value = anyCardPassing(cardsA, f1)
-  else startFile1.value = false
-
-  if (f2) startFile2.value = anyCardPassing(cardsB, f2)
-  else startFile2.value = false
-
-  rafId = requestAnimationFrame(tick)
-}
-
-onMounted(async () => {
-  sync()
-  ro = new ResizeObserver(sync)
-
-  if (trackA.value) ro.observe(trackA.value)
-  if (trackB.value) ro.observe(trackB.value)
-  if (trackC.value) ro.observe(trackC.value)
-
-  // 建议也观察“参考卡片”，断点变化时能立刻刷新 offset
-  if (cardA0.value) ro.observe(cardA0.value)
-  if (cardB0.value) ro.observe(cardB0.value)
-
-  window.addEventListener('resize', sync)
-
-  await nextTick()
-  refreshCardsCache()
-  rafId = requestAnimationFrame(tick)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', sync)
-  ro?.disconnect()
-  ro = null
-
-  cancelAnimationFrame(rafId)
-})
-</script>
 
 <style scoped>
 .lane-a {

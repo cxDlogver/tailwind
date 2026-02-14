@@ -5,7 +5,7 @@
   --animate-float: float 6s ease-in-out infinite;
   --animate-marquee-slow: marquee 80s linear infinite;
   --animate-marquee-slow-reverse: marquee-reverse 80s linear infinite;
-  --animate-marquee-medium: marquee 10s linear infinite;
+  --animate-marquee-medium: marquee 40s linear infinite;
   --animate-marquee-medium-reverse: marquee-reverse 40s linear infinite;
   --animate-marquee-fast: marquee 20s linear infinite;
   --animate-marquee-fast-reverse: marquee-reverse 20s linear infinite;

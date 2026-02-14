@@ -1,4 +1,245 @@
-<!-- pages/news.vue  或 components/NewsCenter.vue -->
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+
+type NewsCategory = 'All' | 'Media' | 'Press' | 'Blog' | 'CEO' | 'Research'
+
+interface NewsItem {
+  id: string // 新闻ID
+  category: Exclude<NewsCategory, 'All'> // 新闻类别
+  title: string // 新闻标题
+  excerpt: string // 新闻摘要
+  date: string // 新闻日期
+  tag: 'Insights' | 'Official' // 新闻标签
+  image: string // 新闻图片URL
+}
+/** 临时数据信息 */
+const ITEMS_PER_PAGE = 6
+const AUTO_PLAY_INTERVAL = 6000
+const yearOptions = ['All', '2025', '2024'] as const
+const CATEGORY_IMAGE_POOLS: Record<Exclude<NewsCategory, 'All'>, string[]> = {
+  Media: [
+    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab',
+    'https://images.unsplash.com/photo-1497366216548-37526070297c',
+    'https://images.unsplash.com/photo-1449156001533-cb39c16b4d00',
+    'https://images.unsplash.com/photo-1497215728101-856f4ea42174',
+  ],
+  Press: [
+    'https://images.unsplash.com/photo-1557804506-669a67965ba0',
+    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4',
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d',
+    'https://images.unsplash.com/photo-1522071823991-b9671f9d7f1f',
+  ],
+  Blog: [
+    'https://images.unsplash.com/photo-1499750310107-5fef28a66643',
+    'https://images.unsplash.com/photo-1493612276216-ee3925520721',
+    'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
+    'https://images.unsplash.com/photo-1454165833767-027eeef1593e',
+  ],
+  CEO: [
+    'https://images.unsplash.com/photo-1431540015161-0bf868a2d407',
+    'https://images.unsplash.com/photo-1507679799987-c73779587ccf',
+    'https://images.unsplash.com/photo-1516321318423-f06f85e504b3',
+    'https://images.unsplash.com/photo-1556761175-b413da4baf72',
+  ],
+  Research: [
+    'https://images.unsplash.com/photo-1451187580459-43490279c0fa',
+    'https://images.unsplash.com/photo-1518770660439-4636190af475',
+    'https://images.unsplash.com/photo-1550751827-4bd374c3f58b',
+    'https://images.unsplash.com/photo-1507413245164-6160d8298b31',
+  ],
+}
+
+const categories = [
+  { label: '全部动态', id: 'All' as const, short: 'ALL' },
+  { label: '媒体报道', id: 'Media' as const, short: 'MED' },
+  { label: '新闻稿', id: 'Press' as const, short: 'PRS' },
+  { label: '博客中心', id: 'Blog' as const, short: 'BLG' },
+  { label: 'CEO 信函', id: 'CEO' as const, short: 'CEO' },
+  { label: '行业研究', id: 'Research' as const, short: 'R&D' },
+]
+
+/** 临时生成的新闻数据 —— 后面需要调用CMS系统API数据替换 useFetch */
+function generateAbundantNews(): NewsItem[] {
+  const categories: Exclude<NewsCategory, 'All'>[] = ['Media', 'Press', 'Blog', 'CEO', 'Research']
+  const data: NewsItem[] = []
+
+  for (let i = 1; i <= 48; i += 1) {
+    const cat = categories[i % categories.length] as Exclude<NewsCategory, 'All'>
+    const pool = CATEGORY_IMAGE_POOLS[cat]
+    const baseImg = pool[i % pool.length]
+    const year = i > 24 ? '2024' : '2025'
+    const month = String((i % 2) + 1).padStart(2, '0')
+    const day = String((i % 28) + 1).padStart(2, '0')
+
+    data.push({
+      id: String(i),
+      category: cat,
+      title:
+        i === 1
+          ? '致合作伙伴：在不确定的数字荒原，建立确定的防御秩序'
+          : i === 2
+            ? 'Lawgenesis 荣登《Axios》年度最具潜力 AI 安全企业榜首'
+            : i === 3
+              ? '深度观察：从零信任架构看企业级 AI 安全的未来趋势'
+              : `全球智库深度简报：关于数字契约与 AI 监管的第 ${i} 阶段研究成果`,
+      excerpt:
+        'AI 的普及意味着生产力的解放，但也带来了法律责任的真空。缔零科技致力于通过“数字契约”填补这一真空，构建透明可信的未来。',
+      date: `${year}.${month}.${day}`,
+      tag: i % 3 === 0 ? 'Insights' : 'Official',
+      image: `${baseImg}?auto=format&fit=crop&q=80&w=1600&sig=${cat}-${i}`,
+    })
+  }
+
+  return data
+}
+
+/** 全局状态 */
+const activeTab = ref<NewsCategory>('All') // 当前标签类型
+const activeYear = ref<(typeof yearOptions)[number]>('All') // 当前年份过滤
+const currentPage = ref(1) // 当前页码
+const newsData = generateAbundantNews() // 全部新闻数据
+// 当前筛选并排序后的新闻数据
+const fullSortedNews = computed(() => {
+  let data = [...newsData]
+
+  if (activeTab.value !== 'All') data = data.filter((item) => item.category === activeTab.value)
+  if (activeYear.value !== 'All')
+    data = data.filter((item) => item.date.startsWith(activeYear.value))
+  // 根据日期排序
+  data.sort((a, b) => {
+    const ta = new Date(a.date.replace(/\./g, '-')).getTime()
+    const tb = new Date(b.date.replace(/\./g, '-')).getTime()
+    return tb - ta
+  })
+
+  return data
+})
+
+// 监听当前类别和年份的变化，重置分页和轮播状态，重启自动播放
+watch(
+  () => [activeTab.value, activeYear.value],
+  () => {
+    currentPage.value = 1
+    heroIndex.value = 0
+    heroDirection.value = 1
+    stopHeroAutoPlay()
+    if (featuredItems.value.length > 0 && !isHoveringHero.value) startHeroAutoPlay()
+  },
+)
+
+/** hexo轮播图信息 */
+const heroIndex = ref(0)
+const heroDirection = ref(1) // 1 表示从右往左
+const isHoveringHero = ref(false)
+// 精选轮播新闻（前 5 条）- 最新的5条
+const featuredItems = computed(() => fullSortedNews.value.slice(0, 5))
+// 当前轮播新闻项
+const heroItem = computed(() => featuredItems.value[heroIndex.value] || featuredItems.value[0])
+//  轮播过渡类名
+const heroTransitionName = computed(() =>
+  heroDirection.value > 0 ? 'hero-slide-left' : 'hero-slide-right',
+)
+// 自动播放定时器ID
+const timerId = ref<number | null>(null)
+
+// 跳转到指定的 Hero 索引
+function jumpToHero(index: number): void {
+  if (index === heroIndex.value) return
+  heroDirection.value = index > heroIndex.value ? 1 : -1
+  heroIndex.value = index
+}
+
+// 分页 Hero， direction: 1 向后， -1 向前
+function paginateHero(direction: number): void {
+  heroDirection.value = direction
+  const len = featuredItems.value.length
+  if (len <= 0) return
+
+  let next = heroIndex.value + direction
+  if (next < 0) next = len - 1
+  if (next >= len) next = 0
+  heroIndex.value = next
+}
+
+// 启动/停止 Hero 自动播放
+function startHeroAutoPlay(): void {
+  if (timerId.value !== null) return
+  timerId.value = window.setInterval(() => paginateHero(1), AUTO_PLAY_INTERVAL)
+}
+
+function stopHeroAutoPlay(): void {
+  if (timerId.value === null) return
+  window.clearInterval(timerId.value)
+  timerId.value = null
+}
+
+// 监听hover动作， hover暂停自动播放
+watch(
+  () => isHoveringHero.value,
+  (hovering) => {
+    if (hovering) stopHeroAutoPlay()
+    else if (featuredItems.value.length > 0) startHeroAutoPlay()
+  },
+)
+
+/** 新闻分割板块 */
+// 计算总页数
+const totalPages = computed(() => Math.ceil(fullSortedNews.value.length / ITEMS_PER_PAGE))
+// 当前页显示的新闻项
+const displayNews = computed(() => {
+  const start = (currentPage.value - 1) * ITEMS_PER_PAGE
+  return fullSortedNews.value.slice(start, start + ITEMS_PER_PAGE)
+})
+// 分页过渡关键字 - 用于 Transition 组件的 key，触发过渡动画 - 当前页数 - 年份 - 类型
+const pageKey = computed(() => `${currentPage.value}-${activeTab.value}-${activeYear.value}`)
+// 处理页码变化
+function handlePageChange(page: number | 'ellipsis1' | 'ellipsis2'): void {
+  if (page === currentPage.value) return
+  if (page === 'ellipsis1')
+    currentPage.value =
+      (visibleItems.value[visibleItems.value.indexOf('ellipsis1') - 1] as number) + 1
+  else if (page === 'ellipsis2')
+    currentPage.value =
+      (visibleItems.value[visibleItems.value.indexOf('ellipsis2') - 1] as number) + 1
+  else currentPage.value = page
+}
+
+// 7个按钮（含省略号）
+type PageItem = number | 'ellipsis1' | 'ellipsis2'
+
+const visibleItems = computed<PageItem[]>(() => {
+  const total = totalPages.value
+  const cur = Math.min(Math.max(1, currentPage.value), total)
+
+  if (total <= 0) return []
+
+  // 不需要省略号的情况：直接显示所有页码
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+
+  // 靠近开头：不显示左省略号
+  if (cur <= 4) {
+    return [1, 2, 3, 4, 5, 'ellipsis2', total]
+  }
+
+  // 靠近结尾：不显示右省略号
+  if (cur >= total - 3) {
+    return [1, 'ellipsis1', total - 4, total - 3, total - 2, total - 1, total]
+  }
+
+  // 中间：左右都有省略号
+  return [1, 'ellipsis1', cur - 1, cur, cur + 1, 'ellipsis2', total]
+})
+/** 生命周期钩子 */
+onMounted(() => {
+  if (featuredItems.value.length > 0 && !isHoveringHero.value) startHeroAutoPlay()
+})
+
+onBeforeUnmount(() => {
+  stopHeroAutoPlay()
+})
+</script>
 
 <template>
   <div class="main-card p-top">
@@ -395,249 +636,6 @@
     </section>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-
-type NewsCategory = 'All' | 'Media' | 'Press' | 'Blog' | 'CEO' | 'Research'
-
-interface NewsItem {
-  id: string // 新闻ID
-  category: Exclude<NewsCategory, 'All'> // 新闻类别
-  title: string // 新闻标题
-  excerpt: string // 新闻摘要
-  date: string // 新闻日期
-  tag: 'Insights' | 'Official' // 新闻标签
-  image: string // 新闻图片URL
-}
-/** 临时数据信息 */
-const ITEMS_PER_PAGE = 6
-const AUTO_PLAY_INTERVAL = 6000
-const yearOptions = ['All', '2025', '2024'] as const
-const CATEGORY_IMAGE_POOLS: Record<Exclude<NewsCategory, 'All'>, string[]> = {
-  Media: [
-    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab',
-    'https://images.unsplash.com/photo-1497366216548-37526070297c',
-    'https://images.unsplash.com/photo-1449156001533-cb39c16b4d00',
-    'https://images.unsplash.com/photo-1497215728101-856f4ea42174',
-  ],
-  Press: [
-    'https://images.unsplash.com/photo-1557804506-669a67965ba0',
-    'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4',
-    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d',
-    'https://images.unsplash.com/photo-1522071823991-b9671f9d7f1f',
-  ],
-  Blog: [
-    'https://images.unsplash.com/photo-1499750310107-5fef28a66643',
-    'https://images.unsplash.com/photo-1493612276216-ee3925520721',
-    'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
-    'https://images.unsplash.com/photo-1454165833767-027eeef1593e',
-  ],
-  CEO: [
-    'https://images.unsplash.com/photo-1431540015161-0bf868a2d407',
-    'https://images.unsplash.com/photo-1507679799987-c73779587ccf',
-    'https://images.unsplash.com/photo-1516321318423-f06f85e504b3',
-    'https://images.unsplash.com/photo-1556761175-b413da4baf72',
-  ],
-  Research: [
-    'https://images.unsplash.com/photo-1451187580459-43490279c0fa',
-    'https://images.unsplash.com/photo-1518770660439-4636190af475',
-    'https://images.unsplash.com/photo-1550751827-4bd374c3f58b',
-    'https://images.unsplash.com/photo-1507413245164-6160d8298b31',
-  ],
-}
-
-const categories = [
-  { label: '全部动态', id: 'All' as const, short: 'ALL' },
-  { label: '媒体报道', id: 'Media' as const, short: 'MED' },
-  { label: '新闻稿', id: 'Press' as const, short: 'PRS' },
-  { label: '博客中心', id: 'Blog' as const, short: 'BLG' },
-  { label: 'CEO 信函', id: 'CEO' as const, short: 'CEO' },
-  { label: '行业研究', id: 'Research' as const, short: 'R&D' },
-]
-
-/** 临时生成的新闻数据 —— 后面需要调用CMS系统API数据替换 useFetch */
-function generateAbundantNews(): NewsItem[] {
-  const categories: Exclude<NewsCategory, 'All'>[] = ['Media', 'Press', 'Blog', 'CEO', 'Research']
-  const data: NewsItem[] = []
-
-  for (let i = 1; i <= 48; i += 1) {
-    const cat = categories[i % categories.length] as Exclude<NewsCategory, 'All'>
-    const pool = CATEGORY_IMAGE_POOLS[cat]
-    const baseImg = pool[i % pool.length]
-    const year = i > 24 ? '2024' : '2025'
-    const month = String((i % 2) + 1).padStart(2, '0')
-    const day = String((i % 28) + 1).padStart(2, '0')
-
-    data.push({
-      id: String(i),
-      category: cat,
-      title:
-        i === 1
-          ? '致合作伙伴：在不确定的数字荒原，建立确定的防御秩序'
-          : i === 2
-            ? 'Lawgenesis 荣登《Axios》年度最具潜力 AI 安全企业榜首'
-            : i === 3
-              ? '深度观察：从零信任架构看企业级 AI 安全的未来趋势'
-              : `全球智库深度简报：关于数字契约与 AI 监管的第 ${i} 阶段研究成果`,
-      excerpt:
-        'AI 的普及意味着生产力的解放，但也带来了法律责任的真空。缔零科技致力于通过“数字契约”填补这一真空，构建透明可信的未来。',
-      date: `${year}.${month}.${day}`,
-      tag: i % 3 === 0 ? 'Insights' : 'Official',
-      image: `${baseImg}?auto=format&fit=crop&q=80&w=1600&sig=${cat}-${i}`,
-    })
-  }
-
-  return data
-}
-
-/** 全局状态 */
-const activeTab = ref<NewsCategory>('All') // 当前标签类型
-const activeYear = ref<(typeof yearOptions)[number]>('All') // 当前年份过滤
-const currentPage = ref(1) // 当前页码
-const newsData = generateAbundantNews() // 全部新闻数据
-// 当前筛选并排序后的新闻数据
-const fullSortedNews = computed(() => {
-  let data = [...newsData]
-
-  if (activeTab.value !== 'All') data = data.filter((item) => item.category === activeTab.value)
-  if (activeYear.value !== 'All')
-    data = data.filter((item) => item.date.startsWith(activeYear.value))
-  // 根据日期排序
-  data.sort((a, b) => {
-    const ta = new Date(a.date.replace(/\./g, '-')).getTime()
-    const tb = new Date(b.date.replace(/\./g, '-')).getTime()
-    return tb - ta
-  })
-
-  return data
-})
-
-// 监听当前类别和年份的变化，重置分页和轮播状态，重启自动播放
-watch(
-  () => [activeTab.value, activeYear.value],
-  () => {
-    currentPage.value = 1
-    heroIndex.value = 0
-    heroDirection.value = 1
-    stopHeroAutoPlay()
-    if (featuredItems.value.length > 0 && !isHoveringHero.value) startHeroAutoPlay()
-  },
-)
-
-/** hexo轮播图信息 */
-const heroIndex = ref(0)
-const heroDirection = ref(1) // 1 表示从右往左
-const isHoveringHero = ref(false)
-// 精选轮播新闻（前 5 条）- 最新的5条
-const featuredItems = computed(() => fullSortedNews.value.slice(0, 5))
-// 当前轮播新闻项
-const heroItem = computed(() => featuredItems.value[heroIndex.value] || featuredItems.value[0])
-//  轮播过渡类名
-const heroTransitionName = computed(() =>
-  heroDirection.value > 0 ? 'hero-slide-left' : 'hero-slide-right',
-)
-// 自动播放定时器ID
-const timerId = ref<number | null>(null)
-
-// 跳转到指定的 Hero 索引
-function jumpToHero(index: number): void {
-  if (index === heroIndex.value) return
-  heroDirection.value = index > heroIndex.value ? 1 : -1
-  heroIndex.value = index
-}
-
-// 分页 Hero， direction: 1 向后， -1 向前
-function paginateHero(direction: number): void {
-  heroDirection.value = direction
-  const len = featuredItems.value.length
-  if (len <= 0) return
-
-  let next = heroIndex.value + direction
-  if (next < 0) next = len - 1
-  if (next >= len) next = 0
-  heroIndex.value = next
-}
-
-// 启动/停止 Hero 自动播放
-function startHeroAutoPlay(): void {
-  if (timerId.value !== null) return
-  timerId.value = window.setInterval(() => paginateHero(1), AUTO_PLAY_INTERVAL)
-}
-
-function stopHeroAutoPlay(): void {
-  if (timerId.value === null) return
-  window.clearInterval(timerId.value)
-  timerId.value = null
-}
-
-// 监听hover动作， hover暂停自动播放
-watch(
-  () => isHoveringHero.value,
-  (hovering) => {
-    if (hovering) stopHeroAutoPlay()
-    else if (featuredItems.value.length > 0) startHeroAutoPlay()
-  },
-)
-
-/** 新闻分割板块 */
-// 计算总页数
-const totalPages = computed(() => Math.ceil(fullSortedNews.value.length / ITEMS_PER_PAGE))
-// 当前页显示的新闻项
-const displayNews = computed(() => {
-  const start = (currentPage.value - 1) * ITEMS_PER_PAGE
-  return fullSortedNews.value.slice(start, start + ITEMS_PER_PAGE)
-})
-// 分页过渡关键字 - 用于 Transition 组件的 key，触发过渡动画 - 当前页数 - 年份 - 类型
-const pageKey = computed(() => `${currentPage.value}-${activeTab.value}-${activeYear.value}`)
-// 处理页码变化
-function handlePageChange(page: number | 'ellipsis1' | 'ellipsis2'): void {
-  if (page === currentPage.value) return
-  if (page === 'ellipsis1')
-    currentPage.value =
-      (visibleItems.value[visibleItems.value.indexOf('ellipsis1') - 1] as number) + 1
-  else if (page === 'ellipsis2')
-    currentPage.value =
-      (visibleItems.value[visibleItems.value.indexOf('ellipsis2') - 1] as number) + 1
-  else currentPage.value = page
-}
-
-// 7个按钮（含省略号）
-type PageItem = number | 'ellipsis1' | 'ellipsis2'
-
-const visibleItems = computed<PageItem[]>(() => {
-  const total = totalPages.value
-  const cur = Math.min(Math.max(1, currentPage.value), total)
-
-  if (total <= 0) return []
-
-  // 不需要省略号的情况：直接显示所有页码
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, i) => i + 1)
-  }
-
-  // 靠近开头：不显示左省略号
-  if (cur <= 4) {
-    return [1, 2, 3, 4, 5, 'ellipsis2', total]
-  }
-
-  // 靠近结尾：不显示右省略号
-  if (cur >= total - 3) {
-    return [1, 'ellipsis1', total - 4, total - 3, total - 2, total - 1, total]
-  }
-
-  // 中间：左右都有省略号
-  return [1, 'ellipsis1', cur - 1, cur, cur + 1, 'ellipsis2', total]
-})
-/** 生命周期钩子 */
-onMounted(() => {
-  if (featuredItems.value.length > 0 && !isHoveringHero.value) startHeroAutoPlay()
-})
-
-onBeforeUnmount(() => {
-  stopHeroAutoPlay()
-})
-</script>
 
 <style>
 @layer utilities {

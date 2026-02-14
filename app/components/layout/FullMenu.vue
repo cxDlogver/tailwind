@@ -1,241 +1,3 @@
-<template>
-  <div class="fixed inset-0 z-100 flex overflow-hidden">
-    <div class="relative flex h-full w-full flex-col bg-white/95 backdrop-blur-3xl md:flex-row">
-      <!-- Left: News Section (Example Content) -->
-
-      <!-- 左侧：资讯遮罩信息页 -->
-      <div
-        class="relative hidden flex-[1.4] flex-col justify-start overflow-y-auto border-r border-[#EEEEEE] bg-[#F4F7F7]/50 p-16 lg:flex xl:p-24"
-      >
-        <div class="fs-left-enter max-w-3xl">
-          <div class="mb-12 flex items-center justify-between">
-            <div>
-              <div
-                class="text-primary mb-3 flex items-center gap-3 font-mono text-[9px] font-bold tracking-[0.6em] uppercase"
-              >
-                <Icon name="heroicons:arrow-trending-up" :size="12" />
-                <span>Intelligence Center</span>
-              </div>
-              <h2 class="text-3xl font-bold tracking-tight text-[#333333]">重点资讯中心</h2>
-            </div>
-
-            <button
-              class="border-primary/30 text-primary border-b pb-1 font-mono text-[10px] font-black tracking-widest uppercase transition-transform hover:translate-x-1"
-              @click="handleLinkClick('/news')"
-            >
-              View All Reports
-            </button>
-          </div>
-
-          <div class="flex flex-col gap-2">
-            <button
-              v-for="(news, idx) in featuredNews"
-              :key="news.id"
-              type="button"
-              class="group hover:shadow-primary/5 flex cursor-pointer items-start gap-8 rounded-3xl border border-transparent p-6 text-left transition-all duration-500 hover:border-[#EEEEEE] hover:bg-white hover:shadow-xl"
-              :style="{ transitionDelay: `${0.08 * idx}s` }"
-              @click="handleLinkClick('`/news')"
-            >
-              <div class="h-24 w-32 shrink-0 overflow-hidden rounded-2xl bg-gray-100 shadow-sm">
-                <img
-                  :src="news.image"
-                  class="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                  alt=""
-                />
-              </div>
-
-              <div class="flex-1 space-y-2">
-                <div class="flex items-center gap-2.5 font-mono text-[9px] text-[#BBBBBB]">
-                  <span class="text-primary font-bold tracking-wider uppercase">{{
-                    news.category
-                  }}</span>
-                  <span class="h-1 w-1 rounded-full bg-[#DDDDDD]" />
-                  <Icon name="heroicons:calendar-date-range-solid" :size="10" />
-                  <span>{{ news.date }}</span>
-                </div>
-
-                <h3
-                  class="group-hover:text-primary text-base leading-snug font-bold text-[#333333] transition-colors"
-                >
-                  {{ news.title }}
-                </h3>
-
-                <div class="flex flex-col gap-2">
-                  <p class="line-clamp-2 text-[11px] leading-relaxed font-light text-[#888888]">
-                    {{ news.excerpt }}
-                  </p>
-                  <div
-                    class="text-primary flex translate-y-1 items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase opacity-0 transition-opacity duration-500 group-hover:translate-y-0 group-hover:opacity-100"
-                  >
-                    阅读更多 <Icon name="heroicons:arrow-right-solid" :size="10" />
-                  </div>
-                </div>
-              </div>
-            </button>
-          </div>
-        </div>
-
-        <!-- 背景装饰文字 -->
-        <div
-          class="left pointer-events-none absolute bottom-[50%] translate-y-1/2 rotate-45 transform opacity-[0.02] select-none"
-        >
-          <span class="text-[8rem] leading-none font-black">NEWSROOM</span>
-        </div>
-      </div>
-
-      <!-- 右侧 导航栏链接 -->
-      <div class="relative flex flex-1 flex-col bg-white p-12 lg:p-24">
-        <button
-          class="text-muted hover:text-primary absolute top-12 right-12 z-20 p-3 transition-all hover:rotate-90"
-          @click="emit('switch-menu-open', false)"
-        >
-          <span>✖</span>
-          <!-- Close button icon -->
-        </button>
-        <div class="mt-16 flex h-full flex-col justify-center lg:mt-0">
-          <nav class="mx-auto flex max-w-xl flex-col gap-2 pr-4 md:mx-0 lg:gap-4">
-            <div
-              class="mb-6 font-mono text-[11px] font-bold tracking-[0.6em] text-[#BBBBBB] uppercase opacity-60"
-            >
-              Navigator Matrix / 导航矩阵
-            </div>
-
-            <div
-              v-for="(link, index) in NAV_LINKS"
-              :key="link.label"
-              class="relative flex flex-col"
-            >
-              <!-- hover 英文背景提示 -->
-              <Transition name="fs-ghost">
-                <div
-                  v-if="ensureState(link.label).hover && !ensureState(link.label).expanded"
-                  class="text-primary pointer-events-none absolute top-1/2 left-16 z-0 -translate-y-1/2 text-8xl font-black italic opacity-[0.05] select-none"
-                >
-                  {{ NAV_ENGLISH[link.label] }}
-                </div>
-              </Transition>
-
-              <!-- 主导航条（磁吸） -->
-              <div
-                class="group relative z-10 flex cursor-pointer items-center gap-8 py-2 select-none"
-                :style="{
-                  transform: `translate3d(${ensureState(link.label).tx}px, ${ensureState(link.label).ty}px, 0)`,
-                  transition: 'transform 80ms linear',
-                }"
-                @mousemove="(e) => onMagMove(e as MouseEvent, link.label)"
-                @mouseenter="() => onMagEnter(link.label)"
-                @mouseleave="() => onMagLeave(link.label)"
-                @click="
-                  () => {
-                    if (link.label === '产品矩阵') toggleExpand(link.label)
-                    else handleLinkClick(link.href)
-                  }
-                "
-              >
-                <span
-                  class="text-primary font-mono text-[10px] font-bold opacity-40 transition-opacity group-hover:opacity-100"
-                >
-                  {{ String(index + 1).padStart(2, '0') }}
-                </span>
-
-                <div class="relative flex items-center gap-4">
-                  <div
-                    class="relative text-4xl font-bold tracking-tighter transition-all duration-500 lg:text-5xl"
-                    :class="
-                      ensureState(link.label).hover || ensureState(link.label).expanded
-                        ? 'translate-x-1 text-[#333333]'
-                        : 'text-[#DDDDDD]'
-                    "
-                  >
-                    {{ link.label }}
-                    <div
-                      class="bg-primary absolute -bottom-1 left-0 h-0.5 transition-all duration-500"
-                      :style="{
-                        width:
-                          ensureState(link.label).hover || ensureState(link.label).expanded
-                            ? '100%'
-                            : '0%',
-                      }"
-                    />
-                  </div>
-
-                  <div
-                    v-if="link.label === '产品矩阵'"
-                    class="transition-colors"
-                    :class="ensureState(link.label).expanded ? 'text-primary' : 'text-placeholder'"
-                    :style="{
-                      transform: `rotate(${ensureState(link.label).expanded ? 180 : 0}deg)`,
-                      transition: 'transform 300ms ease',
-                    }"
-                  >
-                    <Icon name="heroicons:chevron-double-down-solid" :size="24" :stroke-width="3" />
-                  </div>
-                </div>
-              </div>
-
-              <!-- 子产品列表（展开） -->
-              <Transition name="fs-expand">
-                <div
-                  v-if="link.label === '产品矩阵' && ensureState(link.label).expanded"
-                  class="mt-6 mb-8 grid grid-cols-1 gap-3 overflow-hidden pr-4 pl-14 sm:grid-cols-2"
-                >
-                  <button
-                    v-for="(sub, idx) in subProducts"
-                    :key="sub.name"
-                    type="button"
-                    class="group/sub hover:border-primary/20 hover:bg-primary hover:shadow-primary/20 relative flex cursor-pointer flex-col gap-1 rounded-2xl border border-[#EEEEEE] bg-[#F4F7F7]/60 px-6 py-4 text-left shadow-sm transition-all duration-300 hover:shadow-2xl"
-                    @click="handleLinkClick(sub.link)"
-                  >
-                    <div class="flex items-start justify-between">
-                      <span
-                        class="text-primary/40 font-mono text-[9px] font-bold tracking-[0.2em] transition-colors group-hover/sub:text-white/50"
-                      >
-                        MODULE 0{{ idx + 1 }}
-                      </span>
-                      <Icon
-                        name="heroicons:arrow-right-solid"
-                        :size="14"
-                        class="text-white opacity-0 transition-all group-hover/sub:translate-x-1 group-hover/sub:opacity-100"
-                      />
-                    </div>
-                    <span
-                      class="text-base font-bold text-[#333333] transition-colors group-hover/sub:text-white"
-                    >
-                      {{ sub.name }}
-                    </span>
-                    <span
-                      class="text-[10px] font-light text-[#999999] transition-colors group-hover/sub:text-white/60"
-                    >
-                      {{ sub.desc }}
-                    </span>
-                  </button>
-                </div>
-              </Transition>
-            </div>
-          </nav>
-        </div>
-        <div
-          class="mt-auto flex flex-col justify-between gap-6 border-t border-[#F0F0F0] pt-10 text-[10px] font-bold tracking-[0.4em] text-[#BBBBBB] uppercase sm:flex-row"
-        >
-          <p>© 2025 LAWGENESIS PROTOCOLS</p>
-          <div class="flex gap-8">
-            <span
-              class="hover:border-primary hover:text-primary cursor-pointer border-b border-transparent transition-colors"
-            >
-              WeChat
-            </span>
-            <span
-              class="hover:border-primary hover:text-primary cursor-pointer border-b border-transparent transition-colors"
-            >
-              LinkedIn
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { onBeforeUnmount, reactive } from 'vue'
 
@@ -419,6 +181,244 @@ function toggleExpand(label: string) {
   st.expanded = !st.expanded
 }
 </script>
+
+<template>
+  <div class="fixed inset-0 z-100 flex overflow-hidden">
+    <div class="relative flex h-full w-full flex-col bg-white/95 backdrop-blur-3xl md:flex-row">
+      <!-- Left: News Section (Example Content) -->
+
+      <!-- 左侧：资讯遮罩信息页 -->
+      <div
+        class="relative hidden flex-[1.4] flex-col justify-start overflow-y-auto border-r border-[#EEEEEE] bg-[#F4F7F7]/50 p-16 lg:flex xl:p-24"
+      >
+        <div class="fs-left-enter max-w-3xl">
+          <div class="mb-12 flex items-center justify-between">
+            <div>
+              <div
+                class="text-primary mb-3 flex items-center gap-3 font-mono text-[9px] font-bold tracking-[0.6em] uppercase"
+              >
+                <Icon name="heroicons:arrow-trending-up" :size="12" />
+                <span>Intelligence Center</span>
+              </div>
+              <h2 class="text-3xl font-bold tracking-tight text-[#333333]">重点资讯中心</h2>
+            </div>
+
+            <button
+              class="border-primary/30 text-primary border-b pb-1 font-mono text-[10px] font-black tracking-widest uppercase transition-transform hover:translate-x-1"
+              @click="handleLinkClick('/news')"
+            >
+              View All Reports
+            </button>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <button
+              v-for="(news, idx) in featuredNews"
+              :key="news.id"
+              type="button"
+              class="group hover:shadow-primary/5 flex cursor-pointer items-start gap-8 rounded-3xl border border-transparent p-6 text-left transition-all duration-500 hover:border-[#EEEEEE] hover:bg-white hover:shadow-xl"
+              :style="{ transitionDelay: `${0.08 * idx}s` }"
+              @click="handleLinkClick('`/news')"
+            >
+              <div class="h-24 w-32 shrink-0 overflow-hidden rounded-2xl bg-gray-100 shadow-sm">
+                <img
+                  :src="news.image"
+                  class="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                  alt=""
+                />
+              </div>
+
+              <div class="flex-1 space-y-2">
+                <div class="flex items-center gap-2.5 font-mono text-[9px] text-[#BBBBBB]">
+                  <span class="text-primary font-bold tracking-wider uppercase">{{
+                    news.category
+                  }}</span>
+                  <span class="h-1 w-1 rounded-full bg-[#DDDDDD]" />
+                  <Icon name="heroicons:calendar-date-range-solid" :size="10" />
+                  <span>{{ news.date }}</span>
+                </div>
+
+                <h3
+                  class="group-hover:text-primary text-base leading-snug font-bold text-[#333333] transition-colors"
+                >
+                  {{ news.title }}
+                </h3>
+
+                <div class="flex flex-col gap-2">
+                  <p class="line-clamp-2 text-[11px] leading-relaxed font-light text-[#888888]">
+                    {{ news.excerpt }}
+                  </p>
+                  <div
+                    class="text-primary flex translate-y-1 items-center gap-1.5 text-[9px] font-bold tracking-widest uppercase opacity-0 transition-opacity duration-500 group-hover:translate-y-0 group-hover:opacity-100"
+                  >
+                    阅读更多 <Icon name="heroicons:arrow-right-solid" :size="10" />
+                  </div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- 背景装饰文字 -->
+        <div
+          class="left pointer-events-none absolute bottom-[50%] translate-y-1/2 rotate-45 transform opacity-[0.02] select-none"
+        >
+          <span class="text-[8rem] leading-none font-black">NEWSROOM</span>
+        </div>
+      </div>
+
+      <!-- 右侧 导航栏链接 -->
+      <div class="relative flex flex-1 flex-col bg-white p-12 lg:p-24">
+        <button
+          class="text-muted hover:text-primary absolute top-12 right-12 z-20 p-3 transition-all hover:rotate-90"
+          @click="emit('switch-menu-open', false)"
+        >
+          <span>✖</span>
+          <!-- Close button icon -->
+        </button>
+        <div class="mt-16 flex h-full flex-col justify-center lg:mt-0">
+          <nav class="mx-auto flex max-w-xl flex-col gap-2 pr-4 md:mx-0 lg:gap-4">
+            <div
+              class="mb-6 font-mono text-[11px] font-bold tracking-[0.6em] text-[#BBBBBB] uppercase opacity-60"
+            >
+              Navigator Matrix / 导航矩阵
+            </div>
+
+            <div
+              v-for="(link, index) in NAV_LINKS"
+              :key="link.label"
+              class="relative flex flex-col"
+            >
+              <!-- hover 英文背景提示 -->
+              <Transition name="fs-ghost">
+                <div
+                  v-if="ensureState(link.label).hover && !ensureState(link.label).expanded"
+                  class="text-primary pointer-events-none absolute top-1/2 left-16 z-0 -translate-y-1/2 text-8xl font-black italic opacity-[0.05] select-none"
+                >
+                  {{ NAV_ENGLISH[link.label] }}
+                </div>
+              </Transition>
+
+              <!-- 主导航条（磁吸） -->
+              <div
+                class="group relative z-10 flex cursor-pointer items-center gap-8 py-2 select-none"
+                :style="{
+                  transform: `translate3d(${ensureState(link.label).tx}px, ${ensureState(link.label).ty}px, 0)`,
+                  transition: 'transform 80ms linear',
+                }"
+                @mousemove="(e) => onMagMove(e as MouseEvent, link.label)"
+                @mouseenter="() => onMagEnter(link.label)"
+                @mouseleave="() => onMagLeave(link.label)"
+                @click="
+                  () => {
+                    if (link.label === '产品矩阵') toggleExpand(link.label)
+                    else handleLinkClick(link.href)
+                  }
+                "
+              >
+                <span
+                  class="text-primary font-mono text-[10px] font-bold opacity-40 transition-opacity group-hover:opacity-100"
+                >
+                  {{ String(index + 1).padStart(2, '0') }}
+                </span>
+
+                <div class="relative flex items-center gap-4">
+                  <div
+                    class="relative text-4xl font-bold tracking-tighter transition-all duration-500 lg:text-5xl"
+                    :class="
+                      ensureState(link.label).hover || ensureState(link.label).expanded
+                        ? 'translate-x-1 text-[#333333]'
+                        : 'text-[#DDDDDD]'
+                    "
+                  >
+                    {{ link.label }}
+                    <div
+                      class="bg-primary absolute -bottom-1 left-0 h-0.5 transition-all duration-500"
+                      :style="{
+                        width:
+                          ensureState(link.label).hover || ensureState(link.label).expanded
+                            ? '100%'
+                            : '0%',
+                      }"
+                    />
+                  </div>
+
+                  <div
+                    v-if="link.label === '产品矩阵'"
+                    class="transition-colors"
+                    :class="ensureState(link.label).expanded ? 'text-primary' : 'text-placeholder'"
+                    :style="{
+                      transform: `rotate(${ensureState(link.label).expanded ? 180 : 0}deg)`,
+                      transition: 'transform 300ms ease',
+                    }"
+                  >
+                    <Icon name="heroicons:chevron-down-solid" :size="24" :stroke-width="3" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- 子产品列表（展开） -->
+              <Transition name="fs-expand">
+                <div
+                  v-if="link.label === '产品矩阵' && ensureState(link.label).expanded"
+                  class="mt-6 mb-8 grid grid-cols-1 gap-3 overflow-hidden pr-4 pl-14 sm:grid-cols-2"
+                >
+                  <button
+                    v-for="(sub, idx) in subProducts"
+                    :key="sub.name"
+                    type="button"
+                    class="group/sub hover:border-primary/20 hover:bg-primary hover:shadow-primary/20 relative flex cursor-pointer flex-col gap-1 rounded-2xl border border-[#EEEEEE] bg-[#F4F7F7]/60 px-6 py-4 text-left shadow-sm transition-all duration-300 hover:shadow-2xl"
+                    @click="handleLinkClick(sub.link)"
+                  >
+                    <div class="flex items-start justify-between">
+                      <span
+                        class="text-primary/40 font-mono text-[9px] font-bold tracking-[0.2em] transition-colors group-hover/sub:text-white/50"
+                      >
+                        MODULE 0{{ idx + 1 }}
+                      </span>
+                      <Icon
+                        name="heroicons:arrow-right-solid"
+                        :size="14"
+                        class="text-white opacity-0 transition-all group-hover/sub:translate-x-1 group-hover/sub:opacity-100"
+                      />
+                    </div>
+                    <span
+                      class="text-base font-bold text-[#333333] transition-colors group-hover/sub:text-white"
+                    >
+                      {{ sub.name }}
+                    </span>
+                    <span
+                      class="text-[10px] font-light text-[#999999] transition-colors group-hover/sub:text-white/60"
+                    >
+                      {{ sub.desc }}
+                    </span>
+                  </button>
+                </div>
+              </Transition>
+            </div>
+          </nav>
+        </div>
+        <div
+          class="mt-auto flex flex-col justify-between gap-6 border-t border-[#F0F0F0] pt-10 text-[10px] font-bold tracking-[0.4em] text-[#BBBBBB] uppercase sm:flex-row"
+        >
+          <p>© 2025 LAWGENESIS PROTOCOLS</p>
+          <div class="flex gap-8">
+            <span
+              class="hover:border-primary hover:text-primary cursor-pointer border-b border-transparent transition-colors"
+            >
+              WeChat
+            </span>
+            <span
+              class="hover:border-primary hover:text-primary cursor-pointer border-b border-transparent transition-colors"
+            >
+              LinkedIn
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style>
 @layer components {

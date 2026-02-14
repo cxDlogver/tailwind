@@ -2,12 +2,20 @@ import tailwindcss from '@tailwindcss/vite'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxt/content'],
+  modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxt/content', '@nuxtjs/seo'],
   devtools: { enabled: true },
   app: {
     pageTransition: { name: 'page-slide' },
   },
   css: ['~/assets/css/main.css', '~/assets/css/animate.css'],
+  site: {
+    title: '缔零科技', // 网站标题
+    name: '缔零科技', // 网站名称
+    description:
+      '缔零科技提供一站式多模态全风险域内容审查平台，助力企业构建安全、合规的数字环境。了解我们的产品矩阵和合作伙伴，加入我们，共创安全未来。',
+    url: 'https://nuxtseo.com/docs/nuxt-seo/getting-started/introduction',
+    image: '/favicon.ico', // 网站预览图
+  },
   devServer: {
     host: '0.0.0.0',
     port: 3000,
@@ -51,5 +59,14 @@ export default defineNuxtConfig({
         dir: './app/assets/icons/jobs',
       },
     ],
+  },
+
+  schemaOrg: {
+    identity: {
+      type: 'Organization',
+      name: '公司/组织名称',
+      logo: 'https://example.com/logo.png',
+      sameAs: ['https://www.linkedin.com/company/xxx'],
+    },
   },
 })
