@@ -1,4 +1,17 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const { siteUrl } = useSiteSeo()
+
+useSeoMeta({
+  title: '缔零科技 - 智能内容安全解决方案',
+  description:
+    '缔零科技提供一站式多模态全风险域内容审查平台，助力企业构建安全、合规的数字环境。了解我们的产品矩阵和合作伙伴，加入我们，共创安全未来。',
+  ogTitle: '缔零科技 - 智能内容安全解决方案',
+  ogDescription:
+    '缔零科技提供一站式多模态全风险域内容审查平台，助力企业构建安全、合规的数字环境。了解我们的产品矩阵和合作伙伴，加入我们，共创安全未来。',
+  ogUrl: `${siteUrl}/`,
+  ogType: 'website',
+})
+</script>
 
 <template>
   <div>
@@ -79,18 +92,5 @@
 
 .animate-gloss-sweep {
   animation: glossSweep 5s ease-in-out infinite;
-}
-
-.test {
-  /* background:
-    radial-gradient(1% 60%, #fff 0%, #4600ff00 80%),
-    radial-gradient(10% 60%, #fff, #4600ff1a 20%, #4600ff00 100%),
-    radial-gradient(8% 50%, #fff, #4600ff66 20%, #4600ff00 100%); */
-  /* background:
-    radial-gradient(10% 100%, #fff, #fff0 40%), radial-gradient(1% 45%, #fff 60%, #4600ff00 100%),
-    radial-gradient(10% 40%, #4600ff99 50%, #4600ff00 100%),
-    radial-gradient(20% 50%, #fff 2%, #6432e633 50%, #6432e600 100%),
-    radial-gradient(30% 50%, #fff 0%, #6432e6 10%, #6432e600 100%); */
-  background: linear-gradient(90deg, #fff, #6432e6 20%, #6432e600);
 }
 </style>

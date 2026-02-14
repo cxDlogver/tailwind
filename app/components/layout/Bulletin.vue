@@ -1,3 +1,9 @@
+<script setup lang="ts">
+const emit = defineEmits<{
+  (e: 'close'): void
+}>()
+</script>
+
 <template>
   <div class="bg-primary fixed top-0 left-0 z-1000 w-full overflow-hidden shadow-md">
     <div class="relative mx-auto flex max-w-screen-2xl items-center justify-center px-8 py-3">
@@ -21,9 +27,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-const emit = defineEmits<{
-  (e: 'close'): void
-}>()
-</script>

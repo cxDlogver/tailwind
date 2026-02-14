@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { HIRE_STEPS } from '~/data/joinJobData'
 
 const router = useRouter()
 
@@ -7,66 +7,24 @@ const props = defineProps<{
   onBack?: () => void
 }>()
 
-type HireStep = {
-  number: string
-  title: string
-  subtitle: string
-  description: string
-  icon: string // nuxt-icon name
-  tag: string
-  details: string
-}
-
-const steps = computed<HireStep[]>(() => [
-  {
-    number: '01',
-    title: '发起连接',
-    subtitle: '简历初筛',
-    description:
-      '将你的简历投递至 xushuangshuang@yjsafe.cn。我们寻找的不仅仅是履历，更是你对解决复杂“安全难题”的热情，以及在每一行代码中追求极致确定的态度。',
-    icon: 'lucide:send',
-    tag: 'Establish Connection',
-    details:
-      '初筛通常在 3 个工作日内完成。我们会认真审视你在技术深度、逻辑架构以及内容安全领域的独到见解。',
-  },
-  {
-    number: '02',
-    title: '逻辑共鸣',
-    subtitle: '专业导师面',
-    description:
-      '你的直属导师将与你开启一场深度对话。我们避开那些枯燥的教条，直接切入核心：探讨技术边界、系统美学，以及在不确定的环境中如何构建最稳固的防线。',
-    icon: 'lucide:terminal',
-    tag: 'Technical Alignment',
-    details:
-      '我们更倾向于实战案例的拆解，通过探讨真实的业务痛点，寻找那个能在复杂逻辑中游刃有余的你。',
-  },
-  {
-    number: '03',
-    title: '愿景对标',
-    subtitle: '部门负责人面',
-    description:
-      '这一阶段，我们将探讨更宏观的职业路径与团队愿景。我们寻找的是能为缔零科技注入新变量、并认可“极致协作、高度透明”价值观的长期战略伙伴。',
-    icon: 'lucide:users',
-    tag: 'Vision & Culture',
-    details: '在这里，你可以畅谈你对行业未来的预判，以及你希望在这里实现什么样的职业突破。',
-  },
-  {
-    number: '04',
-    title: '正式入伙',
-    subtitle: '发放 Offer',
-    description:
-      '当所有逻辑达成闭环，那份承载着我们共同期待的 Offer 将正式发出。欢迎加入，准备好与我们一起重塑数字空间的底层安全标准了吗？',
-    icon: 'lucide:shield-check',
-    tag: 'Official Onboarding',
-    details: '我们将为你配备全方位的入职指引与“导师陪伴计划”，助你快速融入，开启职业生涯的新乐章。',
-  },
-])
+const copied = ref(false)
+const steps = HIRE_STEPS
 
 function back() {
   if (props.onBack) return props.onBack()
   if (import.meta.client && window.history.length > 1) router.back()
   else router.push('/join')
   if (import.meta.client) window.scrollTo(0, 0)
+}
+
+function CopyEmailToClipboard() {
+  const email = 'xushuangshuang@yjsafe.cn'
+  navigator.clipboard.writeText(email).then(() => {
+    copied.value = true
+    setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  })
 }
 </script>
 
@@ -83,7 +41,7 @@ function back() {
           name="lucide:chevron-left"
           class="h-5.5 w-5.5 transition-transform group-hover:-translate-x-1"
         />
-        返回首页
+        返回
       </button>
 
       <!-- 头部标题区域 -->
@@ -212,16 +170,21 @@ function back() {
             </p>
 
             <div class="flex flex-col items-center gap-3">
-              <a
-                href="mailto:xushuangshuang@yjsafe.cn"
-                class="group text-primary text-h4 flex items-center gap-4 rounded-3xl bg-white px-14 py-5 font-black shadow-2xl transition-all hover:scale-105 active:scale-95"
+              <button
+                class="group text-primary text-h4 flex cursor-pointer items-center gap-4 rounded-3xl bg-white px-14 py-5 font-black shadow-2xl transition-all hover:scale-105 active:scale-95"
+                @click="CopyEmailToClipboard"
               >
                 xushuangshuang@yjsafe.cn
-                <Icon
-                  name="lucide:arrow-right"
-                  class="h-8 w-8 transition-transform group-hover:translate-x-2"
-                />
-              </a>
+                <span v-if="copied" class="flex animate-pulse items-center text-green-700">
+                  <Icon name="heroicons:check-solid" class="mr-2" />
+                  已复制
+                </span>
+
+                <span v-else class="flex items-center">
+                  <Icon name="heroicons:clipboard-document-solid" class="mr-2" />
+                  复制地址
+                </span>
+              </button>
 
               <p
                 class="text-primary-hover text-body font-black tracking-[0.5em] uppercase opacity-80"
@@ -232,6 +195,15 @@ function back() {
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Floating Toast -->
+    <div
+      v-if="copied"
+      class="fixed bottom-16 left-1/2 z-50 flex -translate-x-1/2 animate-bounce items-center gap-2 rounded-full bg-slate-900 px-6 py-3 text-white shadow-2xl"
+    >
+      <Icon name="heroicons:check-circle" class="text-green-400" />
+      <span>邮箱地址已复制到剪贴板</span>
     </div>
   </div>
 </template>

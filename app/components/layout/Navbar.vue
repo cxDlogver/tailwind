@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import { ref } from 'vue'
+
+const isBulletinOpen = ref(true)
+
+const isMenuOpen = ref(false)
+const SwitchMenuOpen = (value: boolean) => {
+  isMenuOpen.value = value
+}
+</script>
+
 <template>
   <div>
     <!-- Bulletin -->
@@ -89,17 +100,6 @@
     </Transition>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue'
-
-const isBulletinOpen = ref(true)
-
-const isMenuOpen = ref(false)
-const SwitchMenuOpen = (value: boolean) => {
-  isMenuOpen.value = value
-}
-</script>
 
 <style scoped>
 @layer components {

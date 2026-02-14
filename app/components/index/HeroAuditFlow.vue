@@ -1,3 +1,186 @@
+<script setup lang="ts">
+/**
+ * 子组件放同文件仅为示例，实际建议拆到 components/hero/
+ * 这里用 defineComponent 可保持简单；也可直接抽出为单独 .vue 文件。
+ */
+import type { PropType } from 'vue'
+import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
+
+const root = ref<HTMLElement | null>(null)
+const active = ref(false)
+
+const inputCards = [
+  { label: '图片', icon: 'IMG' },
+  { label: '视频', icon: 'VID' },
+  { label: '音频', icon: 'AUD' },
+  { label: '文本', icon: 'TXT' },
+  { label: '文件', icon: 'FILE' },
+]
+
+const stages = [
+  {
+    title: 'Parse',
+    subtitle: '多模态解析',
+    bullets: ['OCR / ASR / 抽帧', '结构化与去噪', '证据片段化'],
+  },
+  {
+    title: 'Recall',
+    subtitle: '召回与命中',
+    bullets: ['黑样本相似检索', '规则触发组合', '高精度拦截'],
+  },
+  {
+    title: 'Reason',
+    subtitle: '图谱推理',
+    bullets: ['主体关联扩展', '团伙/投毒识别', '跨源一致性校验'],
+  },
+  {
+    title: 'Decide',
+    subtitle: '处置策略',
+    bullets: ['P0/P1/限流/复核', '证据包生成', '可申诉可审计'],
+  },
+]
+
+const outputs = [
+  { title: '常规用户', level: 'PASS', tags: ['低风险', '抽检'] },
+  { title: '违法团伙', level: 'P1', tags: ['处罚', '团伙关联', '证据链'] },
+  { title: '商业投毒', level: 'P0', tags: ['关停', '投放链路', '黑样本命中'] },
+]
+
+let io: IntersectionObserver | null = null
+
+onMounted(() => {
+  if (!root.value) return
+
+  const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
+  if (reduce) {
+    active.value = true
+    return
+  }
+
+  io = new IntersectionObserver(
+    (entries) => {
+      const e = entries[0]
+      if (e?.isIntersecting) active.value = true
+    },
+    { threshold: 0.35 },
+  )
+
+  io.observe(root.value)
+})
+
+onBeforeUnmount(() => {
+  if (io && root.value) io.unobserve(root.value)
+  io = null
+})
+
+const CardItem = defineComponent({
+  name: 'CardItem',
+  props: {
+    label: { type: String, required: true },
+    icon: { type: String, required: true },
+    delay: { type: Number, default: 0 },
+    active: { type: Boolean, default: false },
+  },
+  template: `
+    <div class="card" :class="{ 'is-active': active }" :style="{ '--d': delay + 'ms' }">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-2xl border border-white/10 bg-white/5 grid place-items-center text-xs text-white/70">
+            {{ icon }}
+          </div>
+          <div class="text-sm font-medium">{{ label }}</div>
+        </div>
+        <div class="h-2 w-2 rounded-full bg-emerald-400/70 shadow-[0_0_18px_rgba(16,185,129,0.45)]"></div>
+      </div>
+      <div class="mt-3 font-mono text-[11px] text-white/50 leading-relaxed">
+        55 77 00 00  ·  payload  ·  mix/noise
+      </div>
+      <div class="mt-2 h-2 w-full rounded-full bg-white/10 overflow-hidden">
+        <div class="card-scan"></div>
+      </div>
+    </div>
+  `,
+})
+
+const StageCard = defineComponent({
+  name: 'StageCard',
+  props: {
+    title: { type: String, required: true },
+    subtitle: { type: String, required: true },
+    bullets: { type: Array as PropType<string[]>, required: true },
+    active: { type: Boolean, default: false },
+    delay: { type: Number, default: 0 },
+  },
+  template: `
+    <div class="stage" :class="{ 'is-active': active }" :style="{ '--d': delay + 'ms' }">
+      <div class="flex items-start justify-between">
+        <div>
+          <div class="text-[13px] font-semibold">{{ title }}</div>
+          <div class="mt-1 text-xs text-white/60">{{ subtitle }}</div>
+        </div>
+        <div class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] text-white/65">
+          layer
+        </div>
+      </div>
+      <ul class="mt-3 space-y-1 text-xs text-white/65 leading-relaxed">
+        <li v-for="b in bullets" :key="b">· {{ b }}</li>
+      </ul>
+      <div class="mt-3 font-mono text-[11px] text-white/45">
+        evidence → compress → confidence+
+      </div>
+    </div>
+  `,
+})
+
+const ResultCard = defineComponent({
+  name: 'ResultCard',
+  props: {
+    title: { type: String, required: true },
+    level: { type: String, required: true },
+    tags: { type: Array as PropType<string[]>, required: true },
+    active: { type: Boolean, default: false },
+    delay: { type: Number, default: 0 },
+  },
+  computed: {
+    badgeClass(): string {
+      if (this.level === 'P0') return 'badge badge-p0'
+      if (this.level === 'P1') return 'badge badge-p1'
+      return 'badge badge-pass'
+    },
+  },
+  template: `
+    <div class="result" :class="{ 'is-active': active }" :style="{ '--d': delay + 'ms' }">
+      <div class="flex items-center justify-between">
+        <div class="text-sm font-medium">{{ title }}</div>
+        <div :class="badgeClass">{{ level }}</div>
+      </div>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <span v-for="t in tags" :key="t" class="pill">{{ t }}</span>
+      </div>
+      <div class="mt-3 text-[11px] text-white/55 font-mono">
+        audit: rule-hit · sample-match · graph-link
+      </div>
+    </div>
+  `,
+})
+
+const Metric = defineComponent({
+  name: 'Metric',
+  props: {
+    label: { type: String, required: true },
+    value: { type: String, required: true },
+    active: { type: Boolean, default: false },
+    delay: { type: Number, default: 0 },
+  },
+  template: `
+    <div class="metric" :class="{ 'is-active': active }" :style="{ '--d': delay + 'ms' }">
+      <div class="text-[11px] text-white/55">{{ label }}</div>
+      <div class="mt-1 text-lg font-semibold">{{ value }}</div>
+    </div>
+  `,
+})
+</script>
+
 <template>
   <section
     ref="root"
@@ -204,189 +387,6 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-/**
- * 子组件放同文件仅为示例，实际建议拆到 components/hero/
- * 这里用 defineComponent 可保持简单；也可直接抽出为单独 .vue 文件。
- */
-import type { PropType } from 'vue'
-import { defineComponent, onBeforeUnmount, onMounted, ref } from 'vue'
-
-const root = ref<HTMLElement | null>(null)
-const active = ref(false)
-
-const inputCards = [
-  { label: '图片', icon: 'IMG' },
-  { label: '视频', icon: 'VID' },
-  { label: '音频', icon: 'AUD' },
-  { label: '文本', icon: 'TXT' },
-  { label: '文件', icon: 'FILE' },
-]
-
-const stages = [
-  {
-    title: 'Parse',
-    subtitle: '多模态解析',
-    bullets: ['OCR / ASR / 抽帧', '结构化与去噪', '证据片段化'],
-  },
-  {
-    title: 'Recall',
-    subtitle: '召回与命中',
-    bullets: ['黑样本相似检索', '规则触发组合', '高精度拦截'],
-  },
-  {
-    title: 'Reason',
-    subtitle: '图谱推理',
-    bullets: ['主体关联扩展', '团伙/投毒识别', '跨源一致性校验'],
-  },
-  {
-    title: 'Decide',
-    subtitle: '处置策略',
-    bullets: ['P0/P1/限流/复核', '证据包生成', '可申诉可审计'],
-  },
-]
-
-const outputs = [
-  { title: '常规用户', level: 'PASS', tags: ['低风险', '抽检'] },
-  { title: '违法团伙', level: 'P1', tags: ['处罚', '团伙关联', '证据链'] },
-  { title: '商业投毒', level: 'P0', tags: ['关停', '投放链路', '黑样本命中'] },
-]
-
-let io: IntersectionObserver | null = null
-
-onMounted(() => {
-  if (!root.value) return
-
-  const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches
-  if (reduce) {
-    active.value = true
-    return
-  }
-
-  io = new IntersectionObserver(
-    (entries) => {
-      const e = entries[0]
-      if (e?.isIntersecting) active.value = true
-    },
-    { threshold: 0.35 },
-  )
-
-  io.observe(root.value)
-})
-
-onBeforeUnmount(() => {
-  if (io && root.value) io.unobserve(root.value)
-  io = null
-})
-
-const CardItem = defineComponent({
-  name: 'CardItem',
-  props: {
-    label: { type: String, required: true },
-    icon: { type: String, required: true },
-    delay: { type: Number, default: 0 },
-    active: { type: Boolean, default: false },
-  },
-  template: `
-    <div class="card" :class="{ 'is-active': active }" :style="{ '--d': delay + 'ms' }">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="h-10 w-10 rounded-2xl border border-white/10 bg-white/5 grid place-items-center text-xs text-white/70">
-            {{ icon }}
-          </div>
-          <div class="text-sm font-medium">{{ label }}</div>
-        </div>
-        <div class="h-2 w-2 rounded-full bg-emerald-400/70 shadow-[0_0_18px_rgba(16,185,129,0.45)]"></div>
-      </div>
-      <div class="mt-3 font-mono text-[11px] text-white/50 leading-relaxed">
-        55 77 00 00  ·  payload  ·  mix/noise
-      </div>
-      <div class="mt-2 h-2 w-full rounded-full bg-white/10 overflow-hidden">
-        <div class="card-scan"></div>
-      </div>
-    </div>
-  `,
-})
-
-const StageCard = defineComponent({
-  name: 'StageCard',
-  props: {
-    title: { type: String, required: true },
-    subtitle: { type: String, required: true },
-    bullets: { type: Array as PropType<string[]>, required: true },
-    active: { type: Boolean, default: false },
-    delay: { type: Number, default: 0 },
-  },
-  template: `
-    <div class="stage" :class="{ 'is-active': active }" :style="{ '--d': delay + 'ms' }">
-      <div class="flex items-start justify-between">
-        <div>
-          <div class="text-[13px] font-semibold">{{ title }}</div>
-          <div class="mt-1 text-xs text-white/60">{{ subtitle }}</div>
-        </div>
-        <div class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] text-white/65">
-          layer
-        </div>
-      </div>
-      <ul class="mt-3 space-y-1 text-xs text-white/65 leading-relaxed">
-        <li v-for="b in bullets" :key="b">· {{ b }}</li>
-      </ul>
-      <div class="mt-3 font-mono text-[11px] text-white/45">
-        evidence → compress → confidence+
-      </div>
-    </div>
-  `,
-})
-
-const ResultCard = defineComponent({
-  name: 'ResultCard',
-  props: {
-    title: { type: String, required: true },
-    level: { type: String, required: true },
-    tags: { type: Array as PropType<string[]>, required: true },
-    active: { type: Boolean, default: false },
-    delay: { type: Number, default: 0 },
-  },
-  computed: {
-    badgeClass(): string {
-      if (this.level === 'P0') return 'badge badge-p0'
-      if (this.level === 'P1') return 'badge badge-p1'
-      return 'badge badge-pass'
-    },
-  },
-  template: `
-    <div class="result" :class="{ 'is-active': active }" :style="{ '--d': delay + 'ms' }">
-      <div class="flex items-center justify-between">
-        <div class="text-sm font-medium">{{ title }}</div>
-        <div :class="badgeClass">{{ level }}</div>
-      </div>
-      <div class="mt-3 flex flex-wrap gap-2">
-        <span v-for="t in tags" :key="t" class="pill">{{ t }}</span>
-      </div>
-      <div class="mt-3 text-[11px] text-white/55 font-mono">
-        audit: rule-hit · sample-match · graph-link
-      </div>
-    </div>
-  `,
-})
-
-const Metric = defineComponent({
-  name: 'Metric',
-  props: {
-    label: { type: String, required: true },
-    value: { type: String, required: true },
-    active: { type: Boolean, default: false },
-    delay: { type: Number, default: 0 },
-  },
-  template: `
-    <div class="metric" :class="{ 'is-active': active }" :style="{ '--d': delay + 'ms' }">
-      <div class="text-[11px] text-white/55">{{ label }}</div>
-      <div class="mt-1 text-lg font-semibold">{{ value }}</div>
-    </div>
-  `,
-})
-</script>
 
 <style scoped>
 .dot-grid {

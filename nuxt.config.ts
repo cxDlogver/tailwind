@@ -2,12 +2,20 @@ import tailwindcss from '@tailwindcss/vite'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineNuxtConfig({
-  modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxt/content'],
+  modules: ['@nuxt/eslint', '@nuxt/icon', '@nuxt/content', '@nuxtjs/seo'],
   devtools: { enabled: true },
   app: {
     pageTransition: { name: 'page-slide' },
   },
   css: ['~/assets/css/main.css', '~/assets/css/animate.css'],
+  site: {
+    title: '',
+    name: 'Nuxt3 Starter',
+    description: 'A Nuxt3 starter template with Tailwind CSS and Icon support.',
+    url: 'https://nuxtseo.com/docs/nuxt-seo/getting-started/introduction',
+    image: '/og-image.png',
+  },
+
   devServer: {
     host: '0.0.0.0',
     port: 3000,
@@ -51,5 +59,14 @@ export default defineNuxtConfig({
         dir: './app/assets/icons/jobs',
       },
     ],
+  },
+
+  schemaOrg: {
+    identity: {
+      type: 'Organization',
+      name: '公司/组织名称',
+      logo: 'https://example.com/logo.png',
+      sameAs: ['https://www.linkedin.com/company/xxx'],
+    },
   },
 })
